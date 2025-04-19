@@ -1,0 +1,21 @@
+# Virtual environment
+env/
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# VSCode / JetBrains editors
+.vscode/
+.idea/
+
+# MacOS system files
+.DS_Store
+
+# Database / migration cache (視情況使用)
+*.sqlite3
+*.log
+*.pot
+
+# Django static files (如有 collectstatic)
+staticfiles/
