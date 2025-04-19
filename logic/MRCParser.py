@@ -36,26 +36,21 @@ def linear_search(key="CLOSED", start_index=0, axis="col"):
     return first_pos
 
 # relevant table : (finds w gonna find)
-# (0,y1) - (x1,y1) 
-# (0,y2) - (x1,y2)
+# (0,y1) - (x2,y1) 
+# (0,y2) - (x2,y2)
 # for each column, we may stop at (x,y) if y + 1 == "CLOSED", provided 0 <= y <= y2   
 # for example, Friday might finish earlier than other weekdays, so we need to check for that
 
 def main():
     global SOURCE_DF
-    # 1. Find y1, y2, x1 and y
+    # 1. Find y1, y2, and x2, note x1 = 0
     y1 = linear_search("HOURS", start_index=0, axis="col")
-    x1 = linear_search("CLOSED", start_index=y1+1, axis="row")
-    y2 = -1
-    week_info = []
-    for col_index in range(x1):
-        y = linear_search("CLOSED", start_index=col_index, axis="col")
-        y2 = y2 if not y else max(y2, y) # see comment above 
-        day_info = SOURCE_DF.iloc[y1:y, col_index].astype(str).tolist()
-        week_info.append(day_info)
-
+    y2 = linear_search("CLOSED", start_index=3, axis="col")
+    x2 = linear_search("CLOSED", start_index=y1+1, axis="row")
+   
     # 2. Build and clean up header
-    df = pd.DataFrame(week_info).T
+    df = SOURCE_DF.iloc[y1:y2, 0:x2]    
+    df = df.reset_index(drop=True) 
     df.columns = df.iloc[0].str.split().str[0]
     df = df.iloc[1:].reset_index(drop=True)
 
@@ -73,13 +68,23 @@ def main():
         
         combined_row = [row1[0]]  # keep first column as is, dropping rows 2 & 3
         for j in range(1, df.shape[1]):
-            rows = [row1[j], row2[j], row3[j]]
-            # join only those not equal to "nan" or empty
-            combined_row.append(" | ".join(filter(lambda x: x and x != "nan", rows)))
+            triplet = map(str,[row1[j], row2[j], row3[j]])
+            
+             # join only those not equal to "nan" or empty, and don't repeat "CLOSED"
+            if str(row1[j]).strip().upper() == "CLOSED":
+               combined_row.append(row1[j])
+            else:
+                combined_row.append(
+                    " | ".join(
+                        filter(lambda x: x and x != "nan", triplet)
+                    )
+                )
             
         combined_rows.append(combined_row)
            
     df = pd.DataFrame(combined_rows, columns=df.columns)
+    
+    
     
     # 5. Export to SQLite database
     conn = sqlite3.connect("mrc_week_data.db")  # Creates a SQLite database file
@@ -88,7 +93,7 @@ def main():
 
     print("Data exported to week_data.db successfully!")
     
-    # print(df) -- uncomment to see the dataframe in the console
+    print(df) #-- uncomment to see the dataframe in the console
 
 
 if __name__ == "__main__":
