@@ -1,0 +1,25 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block title %}Resources{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/sourcepageStyle.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- This is the content block for the resources page -->
+<section class = "intro-section">
+    <div class = "row">
+        <div class = "image-placeholder"></div>
+        <div class = "intro-text">
+            <h1>Resources</h1>
+            <p>
+                At various centers, CSM offers a wide range of learning resources, including books, equipment, and study tools.
+            At Source in CSM, we provide real-time updates on resource availability, ensuring that you can always locate what you need
+            and check the current status of all learning materials.
+            </p>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

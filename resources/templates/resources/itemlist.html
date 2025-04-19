@@ -1,0 +1,60 @@
+{% extends "core/base.html" %}
+{% block title %}My Items{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>My Resource Items</h2>
+    <table class="table table-striped mt-3">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Location</th>
+                <th>Status</th>
+                <th>Tags</th>
+                <th>Edit</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+            <tr>
+                <td>{{ item.name }}</td>
+                <td>{{ item.location }}</td>
+                <td>{{ item.status }}</td>
+                <td>
+                    {% for tag in item.tags.all %}
+                        <span class="badge bg-secondary">{{ tag.name }}</span>
+                    {% empty %}
+                        <span class="text-muted">No tags</span>
+                    {% endfor %}
+                </td>
+                <td>
+                    <a href="{% url 'updateitem' item.id %}" class="btn btn-sm btn-outline-primary">✏️</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" class="text-center text-muted">No items available.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<!-- make the edit page become a modal page instead of a new page -->
+<div class = "model fade" id = "editItemModel" tabindex="-1" role="dialog" aria-labelledby="editItemModelLabel" aria-hidden="true">
+    <div class = "modal-dialog">
+        <div class = "modal-content">
+            <div class = "modal-header">
+                <h5 class = "modal-title" id = "editItemModelLabel">Edit Item</h5>
+                <button type = "button" class = "btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class = "modal-body">
+                <!-- Form for editing item -->
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit" class="btn btn-dark">Save</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
