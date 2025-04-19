@@ -1,4 +1,4 @@
-# 2025SMCCDHackathon
+# SMCCDhackathon
 
 ## 🧰 Project Requirements
 - Python 3.10 or above
@@ -41,7 +41,6 @@ To ignore a file: we add its directory to .gitignore (so don't delete it!)
 ```bash
 pip install -r requirements.txt
 ```
-
 ### ✅ Step 4: Testing if Django has been successfully set up
 1. Apply Database Migrations
 ```bash
