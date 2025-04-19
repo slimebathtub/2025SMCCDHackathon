@@ -1,0 +1,57 @@
+<!-- This is the base template for the Django project -->
+<!-- It includes the basic HTML structure, header and footer-->
+<!-- templates/core/base.html -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>{% block title %}SMCCD Hackathon{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/css/basicStyle.css">
+    {% block extra_head %}{% endblock %}
+
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+<!-- Header / Navigation -->
+    <nav class="navbar fixed-top shadow-sm bg-dark">
+        <div class="container-fluid">
+        <a class="navbar-brand" href="homepage.html">
+            <img src="{% static 'images/csmlogo.png' %}"  alt="CSM Logo" height="50">
+        </a>
+        <div class="d-flex">
+            <a href="homepage.html">Home</a>
+            <a href="#">Resources</a>
+            <a href="#">Meeting Room</a>
+            <a href="#">Event</a>
+            <a class="btn btn-outline-dark" href="#">Sign in</a>
+        </div>
+    </div>
+    </nav>
+
+    <!-- Content Block -->
+    <main class="flex-grow-1">
+    {% block content %}
+    <!-- insert content here-->
+    {% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container d-flex flex-column align-items-center">
+            <div class="footer-links d-flex justify-content-center gap-4">
+                <a href="#">Resources</a>
+                <a href="#">Room</a>
+                <a href="#">Event</a>
+            </div>
+        </div>
+    </footer>
+
+<!-- Optional JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
