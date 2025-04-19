@@ -1,0 +1,49 @@
+/* Custom clickable card */
+.card-link .custom-card {
+    background-color: #f0f8ff;
+    transition: 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.card-link .custom-card:hover {
+    background-color: #ffffff;
+    border-color: #007bff;
+    transform: scale(1.02);
+}
+
+.card-link .custom-card h5 {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.card-link .custom-card p {
+    font-size: 14px;
+    color: #666;
+}
+
+/*hero section*/
+.hero-section {
+    margin-top: 70px;
+    background-image: url('../images/heroimage.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 70vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background-attachment: fixed;
+}
+
+.hero-section p {
+    color: white;
+}
+
+.bg-overlay {
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 12px;
+    h1, p {
+        text-shadow: 1px 1px 5px rgba(0,0,0,0.7);
+    }
+}
