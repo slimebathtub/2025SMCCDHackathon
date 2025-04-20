@@ -1,0 +1,22 @@
+/*hero section*/
+/* static/css/hero.css */
+.hero-section {
+    margin-top: 0; /* already pushed by body padding */
+    background: url('../images/heroimage.jpg') center/cover no-repeat fixed;
+    height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .hero-section .bg-overlay {
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 12px;
+    padding: 2rem;
+    text-align: center;
+  }
+  .hero-section .bg-overlay h1,
+  .hero-section .bg-overlay p {
+    color: var(--white);
+    text-shadow: 1px 1px 5px rgba(0,0,0,0.7);
+  }
+  

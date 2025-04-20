@@ -1,0 +1,51 @@
+{# extend your renamed base #}
+{% extends "tutoring/tutoring_page.html" %}
+
+{% block title %}Schedule for {{ selected_day }}{% endblock %}
+
+
+
+{% block content %}
+
+  <h1>{{ selected_day }} Tutoring Schedule</h1>
+  <!-- …the rest of your form + table… -->
+  <form method="get">
+    <label for="day-select">Choose a day:</label>
+    <select id="day-select" name="day" onchange="this.form.submit()">
+      {% for value, label in weekdays %}
+        <option value="{{ value }}"
+          {% if value == selected_day %}selected{% endif %}>
+          {{ label }}
+        </option>
+      {% endfor %}
+    </select>
+    <noscript>
+      <button type="submit">View</button>
+    </noscript>
+  </form>
+  Some relevant text
+  <table border="1" cellpadding="5" cellspacing="0">
+    <thead>
+      <tr>
+        <th>Subject</th>
+        <th>Class</th>
+        <th>Time</th>
+        <th>Location</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for s in sessions %}
+        <tr>
+          <td>{{ s.subject }}</td>
+          <td>{{ s.courses }}</td>
+          <td>{{ s.time }}</td>
+          <td>{{ s.location }}</td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="4"><em>No sessions for {{ selected_day }}</em></td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

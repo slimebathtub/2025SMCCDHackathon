@@ -1,0 +1,28 @@
+/* static/css/navbar.css */
+/* ensure page content sits below the fixed navbar */
+body {
+    padding-top: var(--navbar-height);
+    background-color: var(--background-color);
+  }
+  
+  /* your existing navbar rules */
+  .navbar.fixed-top {
+    height: var(--navbar-height);
+    padding: 0 1rem;
+  }
+  .navbar-brand,
+  .navbar a {
+    font-family: 'Playfair Display', serif;
+    color: var(--white);
+  }
+  .navbar a {
+    text-decoration: none;
+    padding: 0.75rem 1rem;
+  }
+  .navbar a:hover:not(:has(img)) {
+    background-color: var(--dark-blue);
+    border-radius: 5px;
+  }
+
+  
+/* navbar set*/

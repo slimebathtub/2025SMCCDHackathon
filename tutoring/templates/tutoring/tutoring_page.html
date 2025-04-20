@@ -1,0 +1,9 @@
+{% extends "core/base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+  <h1>Welcome to the Tutoring Scheduler</h1>
+  <p>This site lets you view daily tutoring sessions and locations.</p>
+  <p><a href="{% url 'tutoring' %}">See today's schedule</a></p>
+{% endblock %}

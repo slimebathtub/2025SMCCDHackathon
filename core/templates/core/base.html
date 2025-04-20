@@ -5,16 +5,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <title>{% block title %}SMCCD Hackathon{% endblock %}</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8">
+  <title>{% block title %}SMCCD Hackathon{% endblock %}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <!-- Bootstrap CSS -->
+  <link
+  href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../../static/css/basicStyle.css">
-    {% block extra_head %}{% endblock %}
+  <!-- Your global CSS -->
+  <link rel="stylesheet" href="{% static 'css/main.css' %}">
+  <link rel="stylesheet" href="{% static 'css/variables.css' %}">
+  <link rel="stylesheet" href="{% static 'css/navbar.css'   %}">
+  {% block extra_css %}{% endblock %}
+  <link rel="stylesheet" href="{% static 'css/footer.css'   %}">
 
-</head>
+
+  </head>
 <body class="d-flex flex-column min-vh-100">
 
 <!-- Header / Navigation -->
@@ -28,6 +35,7 @@
             <a href="#">Resources</a>
             <a href="#">Meeting Room</a>
             <a href="#">Event</a>
+            <a href="tutoring">Tutoring</a>
             <a class="btn btn-outline-dark" href="#">Sign in</a>
         </div>
     </div>

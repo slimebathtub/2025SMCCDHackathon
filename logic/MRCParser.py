@@ -1,5 +1,5 @@
 import pandas as pd
-import sqlite3
+#import sqlite3
 
 ''' This script is meant to parse the MRC (Math Resource Center) tutoring schedule
     into a .db file that will be then displayed in the website
@@ -14,11 +14,24 @@ MRC_URL = (
     "2PACX-1vRK33wM-yaF-svgS2vuzaSO_YP-Uh_NeZRP5MVRMIlp9tcOQIvcJRQLbpjhOyd0U73ou_IaW-l9G2Hm"
     "/pub?gid=105984831&single=true&output=csv"
 )
-
+WEEK_DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
 #pandas indexing: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html
 # most crucial : #df.iloc[y1:y2, x1:x2] # y1:y2 = rows, x1:x2 = columns
 
 SOURCE_DF = pd.read_csv(MRC_URL)
+
+class DailySchedule:
+    def __init__(self, courses = "General", time="00:00 AM - 00:00 PM", subject="Math", location="MRC", weekday="Sunday"):
+        self.courses = courses
+        self.time = time
+        self.location = location
+        self.subject = subject
+        self.weekday = weekday
+
+    def __repr__(self):
+        return f'{self.subject} - {self.class_name} at {self.location}, {self.time}'
+
+
 
 def linear_search(key="CLOSED", start_index=0, axis="col"):
     global SOURCE_DF
@@ -37,11 +50,20 @@ def linear_search(key="CLOSED", start_index=0, axis="col"):
 
 # relevant table : (finds w gonna find)
 # (0,y1) - (x2,y1) 
-# (0,y2) - (x2,y2)
-# for each column, we may stop at (x,y) if y + 1 == "CLOSED", provided 0 <= y <= y2   
+# (0,y2) - (x2,y2) 
 # for example, Friday might finish earlier than other weekdays, so we need to check for that
 
-def main():
+
+def clean(element):
+    name = str(element).strip()
+    if name.__contains__("Stats"):
+        name = "Stats"
+    elif name and name.strip() not in ["nan", "CLOSED"]:
+        name = "General Math"
+        
+    return name
+
+def format_df():
     global SOURCE_DF
     # 1. Find y1, y2, and x2, note x1 = 0
     y1 = linear_search("HOURS", start_index=0, axis="col")
@@ -58,7 +80,7 @@ def main():
     col1, col2 = df.columns[:2]
     df[col1] = df[col1].astype(str).str.cat(df[col2].astype(str), sep=" - ")
     df = df.drop(columns=col2)
-
+    
     # 4. Combine every three rows by joining non‐null strings with “ | ”
     combined_rows = []
     for i in range(0, df.shape[0], 3):  # the excel has gaps of 3
@@ -66,35 +88,68 @@ def main():
         row2 = df.iloc[i + 1].tolist() if i + 1 < len(df) else []
         row3 = df.iloc[i + 2].tolist() if i + 2 < len(df) else []
         
+        
         combined_row = [row1[0]]  # keep first column as is, dropping rows 2 & 3
         for j in range(1, df.shape[1]):
-            triplet = map(str,[row1[j], row2[j], row3[j]])
-            
-             # join only those not equal to "nan" or empty, and don't repeat "CLOSED"
-            if str(row1[j]).strip().upper() == "CLOSED":
-               combined_row.append(row1[j])
-            else:
-                combined_row.append(
-                    " | ".join(
-                        filter(lambda x: x and x != "nan", triplet)
-                    )
+            triplet = set(map(clean,[row1[j], row2[j], row3[j]]))
+            combined_row.append(
+                " , ".join(
+                    filter(lambda x: x and x != "nan", triplet)
                 )
-            
+            )
         combined_rows.append(combined_row)
-           
     df = pd.DataFrame(combined_rows, columns=df.columns)
+    #print(df)
     
-    
-    
-    # 5. Export to SQLite database
-    conn = sqlite3.connect("mrc_week_data.db")  # Creates a SQLite database file
-    df.to_sql("mrc_week_schedule", conn, if_exists="replace", index=False)
-    conn.close()
+    return df
+   
+#weekday, subject, class_name, time, location
+        
+def create_weekdays_dfs(df = format_df()):
+    """
+    Split a schedule-DF whose first column is time and next five columns are
+    Mon–Fri into five dfs:
+      monday_df, tuesday_df, wednesday_df, thursday_df, friday_df
 
-    print("Data exported to week_data.db successfully!")
+    Each output has exactly these columns, in order:
+      subject, courses, time, location
+    """
+    # 1) Identify columns
+    time_col = df.columns[0]
+    day_cols = list(df.columns[1:6])  # [Mon, Tue, Wed, Thu, Fri]
+
+    # 2) Build one DataFrame per day
+    week_dfs = dict()
+    week_index = 0
+    for day in day_cols:
+        # assemble a new DataFrame
+        mask = (
+            df[day].astype(str).str.strip().ne("CLOSED")  # != "CLOSED"
+            & df[day].notna()                             # drop NaN
+            & df[day].astype(str).str.strip().ne("")      # drop empty strings
+        )
+        clean_df = df.loc[mask]
+        day_df = pd.DataFrame({
+            "subject":  ["Math"] * len(clean_df),
+            "courses":  clean_df[day].astype(str),
+            "time":     clean_df[time_col].astype(str),
+            "location": ["MRC"] * len(clean_df),
+        })
+        
+        week_day = WEEK_DAYS[week_index]
+        week_index += 1
+        week_dfs[week_day] = day_df
+
+    return week_dfs
     
-    print(df) #-- uncomment to see the dataframe in the console
-
-
+    
+def main():
+    weekdays = create_weekdays_dfs()
+    
+    for day in weekdays:
+        print(day)
+        print(weekdays[day])
+    
+   
 if __name__ == "__main__":
     main()

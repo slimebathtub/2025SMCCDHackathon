@@ -1,0 +1,28 @@
+/* static/css/footer.css */
+/* footer set */
+
+footer .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 30px;
+}
+
+.footer {
+    background-color: var(--dark-blue);
+    font-family: 'Playfair Display', serif;
+    color: var(--footer-color);
+}
+
+.footer-links a {
+    color: var(--basically-white);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.footer-links a:hover {
+    color: var(--white);
+    text-decoration: underline;
+}
+

@@ -38,11 +38,13 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    # Custom apps
     "accounts",
     "core",
     "events",
     "resources",
-    "rooms"
+    "rooms",
+    "tutoring",
 ]
 
 MIDDLEWARE = [
