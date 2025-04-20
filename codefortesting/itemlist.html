@@ -1,0 +1,107 @@
+{% extends "core/base.html" %}
+{% block title %}My Items{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>My Resource Items</h2>
+    <table class="table table-striped mt-3">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Location</th>
+                <th>Status</th>
+                <th>Tags</th>
+                <th>Edit</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+            <tr>
+                <td>{{ item.name }}</td>
+                <td>{{ item.location }}</td>
+                <td>{{ item.status }}</td>
+                <td>
+                    {% for tag in item.tags.all %}
+                        <span class="badge bg-secondary">{{ tag.name }}</span>
+                    {% empty %}
+                        <span class="text-muted">No tags</span>
+                    {% endfor %}
+                </td>
+                <td>
+                    <a href="{% url 'updateitem' item.id %}"
+                        class="btn btn-sm btn-outline-primary"
+                        data-bs-toggle="modal"
+                        data-bs-target="#editItemModal"
+                        data-url="{% url 'updateitem' item.id %}">
+                        ✏️
+                    </a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" class="text-center text-muted">No items available.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<!-- make the edit page become a modal page instead of a new page -->
+<div class="modal fade" id="editItemModal" tabindex="-1" role="dialog" aria-labelledby="editItemModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editItemModalLabel">Edit Item</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="editItemModalBody">
+                <!-- Form content will be loaded here via JavaScript -->
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Edit Modal's javascrip part -->
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const modal = document.getElementById('editItemModal');
+        modal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+            const url = button.getAttribute('data-url');
+            const modalBody = document.getElementById('editItemModalBody');
+
+            fetch(url)
+                .then(response => response.text())
+                .then(html => {
+                    modalBody.innerHTML = html;
+                });
+        });
+    });
+
+    document.addEventListener('submit', function (event) {
+        const form = event.target;
+        if (form.id === 'editItemForm') {
+            event.preventDefault();
+
+            fetch(form.action, {
+                method: 'POST',
+                body: new FormData(form),
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    bootstrap.Modal.getInstance(document.getElementById('editItemModal')).hide();
+                    window.location.reload();
+                }
+            });
+        }
+    });
+</script>
+
+{% endblock %}

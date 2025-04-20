@@ -3,7 +3,6 @@
     padding-top: 70px;
 }
 .intro-section .row {
-    border: 2px solid rgb(0, 0, 0);
     height: 60vh;
     display: flex;
     flex-direction: row;
@@ -35,4 +34,144 @@
     background-repeat: no-repeat;
     margin: 0 auto;
     border-radius: 8px;
+}
+
+
+/* secon section: intro section */
+.search-section {
+    max-width: 100%;
+    margin: 2rem auto;
+    background-color: #f8f9fa;
+    border-radius: 16px;
+    padding: 40px 40px;
+    margin: 60px 60px;
+}
+.search-section .row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 5rem;
+    margin-bottom: 0.5rem;
+}
+.search-section h2 {
+    font-size: 36px;
+    font-weight: bold;
+    color: #000000;
+    margin-bottom: 1rem;
+}
+.search-section .form-label {
+    font-size: 1rem;
+    color: #000000;
+    margin-bottom: 0.5rem;
+}
+.search-section .form-control,
+.search-section .form-select {
+    width: 100%;
+    height: 2.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    border: 1px solid #ced4da;
+    font-size: 1rem;
+    color: #767676;
+}
+
+.search-section .form-check-input {
+    width: 3rem;
+    height: 1.75rem;
+}
+
+.search-section .form-check-input::before {
+    width: 1.5rem;
+    height: 1.5rem;
+    top: calc((1.75rem - 1.5rem) / 2);
+    left: calc((3rem - 1.5rem) / 2);
+}
+/* align switch and its label horizontally with a small gap */
+.search-section .form-switch {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex: 0 0 auto;
+    width: auto !important;
+    margin-top: 0;
+    order: 4;
+}
+
+.search-section .btn-primary{
+    background-color: #3d3d3d !important;
+    border-color: #000000 !important;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    color: #ffffff !important;
+}
+
+/* evenly distribute the three form items */
+.search-section .row > * {
+    flex: 1;
+    max-width: 30%;
+}
+
+
+/* third section: table */
+.tag-label {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    margin: 0.125rem;
+    border: 1px solid #ccc;
+    border-radius: 0.25rem;
+    font-size: 0.875rem;
+    color: #333;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+.results-section td > .tag-label:first-child {
+    margin-left: 0;
+}
+
+.results-section td {
+    white-space: normal;
+}
+
+
+/* adjust results table width */
+.results-section table {
+    width: 100%;
+    table-layout: auto;
+    margin: 0 auto;
+}
+
+
+/* use fixed layout for proportional column widths */
+.results-section table {
+    table-layout: fixed;
+}
+
+/* Column width ratios: Name(2):Location(1):Status(1):Tags(3) out of 7 parts */
+.results-section th:nth-child(1), .results-section td:nth-child(1) {
+    width: 28.57%; /* 2/7 */
+    text-align: left;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    font-weight: bold;
+} 
+.results-section th:nth-child(2), .results-section td:nth-child(2) {
+    width: 14.2857%; /* 1/7 */
+    text-align: left;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+}
+.results-section th:nth-child(3), .results-section td:nth-child(3) { 
+    width: 14.2857%; /* 1/7 */
+    text-align: left;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+}
+.results-section th:nth-child(4), .results-section td:nth-child(4) { 
+    width: 42.857%; /* 3/7 */
+    text-align: left;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
 }

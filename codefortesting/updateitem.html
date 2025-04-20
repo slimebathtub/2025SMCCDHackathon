@@ -1,0 +1,5 @@
+<form id="editItemForm" method="post" action="{{ request.path }}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-dark">Save</button>
+</form>
