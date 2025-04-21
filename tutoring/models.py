@@ -12,7 +12,7 @@ class TutoringDailySchedule(models.Model):
 
     weekday  = models.CharField(max_length=9, choices=WEEKDAYS, default="Monday")
     subject  = models.CharField(max_length=100, default="Math")
-    courses  = models.CharField(max_length=70)
+    courses  = models.JSONField(default=list)
     time     = models.CharField(max_length=100)
     location = models.CharField(max_length=50, default="MRC")
 

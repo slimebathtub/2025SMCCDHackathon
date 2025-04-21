@@ -1,29 +1,30 @@
 {# extend your renamed base #}
 {% extends "tutoring/tutoring_page.html" %}
-
+{% load schedule_extras %}
 {% block title %}Schedule for {{ selected_day }}{% endblock %}
 
 
 
 {% block content %}
 
-  <h1>{{ selected_day }} Tutoring Schedule</h1>
-  <!-- …the rest of your form + table… -->
-  <form method="get">
-    <label for="day-select">Choose a day:</label>
-    <select id="day-select" name="day" onchange="this.form.submit()">
-      {% for value, label in weekdays %}
+  <div class="schedule-header">
+    <h1 class="schedule-title">{{ selected_day }} Tutoring Schedule</h1>
+    <form method="get" class="day-select-form">
+      <label for="day-select">Choose a day:</label>
+      <select id="day-select" name="day" onchange="this.form.submit()">
+        {% for value, label in weekdays %}
         <option value="{{ value }}"
           {% if value == selected_day %}selected{% endif %}>
           {{ label }}
         </option>
       {% endfor %}
-    </select>
-    <noscript>
-      <button type="submit">View</button>
-    </noscript>
-  </form>
-  Some relevant text
+      </select>
+      <noscript><button type="submit">View</button></noscript>
+    </form>
+  </div>
+  
+
+  <div class="table-responsive">
   <table border="1" cellpadding="5" cellspacing="0">
     <thead>
       <tr>
@@ -37,7 +38,7 @@
       {% for s in sessions %}
         <tr>
           <td>{{ s.subject }}</td>
-          <td>{{ s.courses }}</td>
+          <td>{{ s.courses|group_courses}}</td>
           <td>{{ s.time }}</td>
           <td>{{ s.location }}</td>
         </tr>
@@ -48,4 +49,12 @@
       {% endfor %}
     </tbody>
   </table>
+  </div>
+
+  {# placeholder explanatory text #}
+  <p class="table-explain">
+    Here you can see the full list of available tutoring sessions for the selected day.
+    If you have any questions about a session time or location, please do not contact me.
+  </p>
+
 {% endblock %}

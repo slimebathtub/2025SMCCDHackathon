@@ -1,0 +1,131 @@
+/* tutoring/static/tutoring/css/tutoring_table.css */
+
+/* ------- Page Header & Selector ------- */
+
+main {
+    padding: 1.5rem;
+  }
+  
+  .schedule-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  /* Title with a little left border */
+  .schedule-title {
+    display: inline-block;
+    font-size: 1.8rem;
+    color: var(--primary-color);
+    border-left: 4px solid var(--secondary-color);
+    padding-left: 0.75rem;
+    margin: 0;
+    line-height: 1.2;
+  }
+  
+  /* The dropdown form under the title */
+  .day-select-form {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .day-select-form label {
+    font-weight: 600;
+    color: var(--dark-blue);
+  }
+  .day-select-form select {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--border-bottom);
+    border-radius: 4px;
+    background: var(--white);
+    color: var(--dark-blue);
+    font-size: 1rem;
+    transition: border-color 0.2s;
+  }
+  .day-select-form select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+  }
+  
+  /* ------- Table Container & Sticky Header ------- */
+  
+  .table-responsive {
+    position: relative;       /* needed for sticky children */
+    margin: 0 auto;
+    width: 100%;
+    max-width: 800px;
+    max-height: 35vh;         /* shrink vertical height */
+    overflow-x: auto;
+    overflow-y: auto;
+  }
+  
+  /* lock the <th> row to the top of the scroll container */
+  .table-responsive thead th {
+    position: sticky;
+    top: 0;
+    background: var(--primary-color);
+    color: var(--white);
+    z-index: 2;
+    text-align: left;        /* ensure left alignment */
+    padding: 0.5rem 0.75rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+  
+  /* ------- Table Body & Zebra Stripes ------- */
+  
+  .table-responsive table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--white);
+    box-shadow: 0 2px 4px var(--black);
+    border-radius: 6px;
+    font-size: 0.875rem;      /* ~14px */
+    margin: 0;                /* already centered by container */
+  }
+  
+  /* Body cells, left‑aligned by default */
+  .table-responsive tbody td {
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid var(--border-bottom);
+    color: var(--dark-blue);
+    white-space: nowrap;
+  }
+  
+  /* Accent first column, italic second */
+  .table-responsive tbody td:first-child {
+    font-weight: 500;
+    color: var(--secondary-color);
+  }
+  .table-responsive tbody td:nth-child(2) {
+    font-style: italic;
+  }
+  
+  /* zebra striping + hover highlight */
+  .table-responsive tbody tr:nth-child(even) {
+    background: var(--background-white);
+  }
+  .table-responsive tbody tr:hover {
+    background: var(--hover-background);
+  }
+  
+  /* empty‑state style */
+  .table-responsive tbody tr.empty td {
+    text-align: center;
+    color: var(--nearly-white);
+    font-style: italic;
+  }
+  
+  /* ------- Explanatory Text ------- */
+  
+  .table-explain {
+    max-width: 800px;
+    margin: 1rem auto;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    color: var(--dark-blue);
+    text-align: left;
+  }
+  
