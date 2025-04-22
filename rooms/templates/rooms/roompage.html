@@ -1,0 +1,84 @@
+{% extends 'resources/resource_base.html' %}
+
+{% block title %}Rooms{% endblock %}
+
+{% block intro %}
+<section class="intro-section">
+  <div class="row">
+    <div class="image-placeholder">
+      <img src="{% static 'images/room_banner.jpg' %}" alt="Rooms" class="img-fluid rounded">
+    </div>
+    <div class="intro-text">
+      <h1>Meeting Rooms</h1>
+      <p>
+        Explore our selection of reservable meeting spaces across campus centers. Each room includes current availability,
+        capacity, and usage restrictions to help you choose the best space for your learning or collaboration needs.
+      </p>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block search %}
+<section class="search-section">
+  <form method="get" action="{% url 'rooms-list' %}">
+    <div class="container">
+      <h2>Search</h2>
+      <div class="row justify-content-between align-items-center">
+        <div class="col-md-4">
+          <label for="search-name" class="form-label">Room Name</label>
+          <input type="text" class="form-control" name="name" id="search-name" placeholder="Enter room name" value="{{ request.GET.name }}">
+        </div>
+        <div class="col-md-4">
+          <label for="search-location" class="form-label">Location</label>
+          <select id="search-location" class="form-select" name="location">
+            <option value="">All</option>
+            {% for location in locations %}
+              <option value="{{ location.id }}" {% if request.GET.location == location.id %}selected{% endif %}>{{ location.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+    </div>
+  </form>
+</section>
+{% endblock %}
+
+{% block results %}
+<section class="results-section container mt-5">
+  <div class="table-wrapper">
+    <table class="table table-bordered">
+      <thead class="table-primary text-center">
+        <tr>
+          <th>ID</th>
+          <th>Room Name</th>
+          <th>Location</th>
+          <th>Available People Amount</th>
+          <th>Available</th>
+        </tr>
+      </thead>
+      <tbody class="text-center">
+        {% for room in rooms %}
+        <tr>
+          <td>{{ room.id }}</td>
+          <td><strong>{{ room.name }}</strong></td>
+          <td>{{ room.location }}</td>
+          <td>{{ room.capacity }}</td>
+          <td>
+            {% if room.is_available %}
+              <span>🟢 <strong>Available</strong></span>
+            {% else %}
+              <span>🔴 <strong>No available</strong></span>
+            {% endif %}
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="5">No matching rooms found.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}
