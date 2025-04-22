@@ -1,16 +1,16 @@
 /* first section: intro section */
 .intro-section{
-    padding-top: 70px;
+    padding-top: 0px;
 }
 .intro-section .row {
-    height: 60vh;
+    width: 90%;
+    margin: 2rem auto;
+    height: 50vh;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    gap: 5%;
     padding: 40px 40px;
-    margin: 60px 60px;
 }
 
 .intro-text {
@@ -39,12 +39,11 @@
 
 /* secon section: intro section */
 .search-section {
-    max-width: 100%;
+    max-width: 80%;
     margin: 2rem auto;
     background-color: #f8f9fa;
     border-radius: 16px;
     padding: 40px 40px;
-    margin: 60px 60px;
 }
 .search-section .row {
     display: flex;
@@ -138,13 +137,20 @@
 
 /* adjust results table width */
 .results-section table {
-    width: 100%;
+    width: 90%;
     table-layout: auto;
     margin: 0 auto;
 }
 
+.results-section {
+    margin-bottom: 3rem;
+}
 
-/* use fixed layout for proportional column widths */
+.table-wrapper {
+    max-height: 650px; /* Adjust this value as needed */
+    overflow-y: auto;
+}
+
 .results-section table {
     table-layout: fixed;
 }

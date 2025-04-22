@@ -2,7 +2,7 @@
 {% load static %}
 {% block title %}Resources{% endblock %}
 
-{% block extra_head %}
+{% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/sourcepageStyle.css' %}">
 {% endblock %}
 
@@ -90,35 +90,38 @@
 
 <section class = "results-section container mt-5">
     <table class = "table table-striped">
-        <thead>
-            <tr>
-                <th scope = "col">Item Name</th>
-                <th scope = "col">Location</th>
-                <th scope = "col">Status</th>
-                <th scope = "col">Item Tag</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for item in items %}
+        <div class="table-wrapper">
+            <table class = "table table-striped">
+            <thead>
                 <tr>
-                    <td>{{ item.name }}</td>
-                    <td>{{ item.location }}</td>
-                    <td>{{ item.status }}</td>
-                    <td>
-                        {% for tag in item.tags.all %}
-                            <span class = "tag-label">{{ tag }}</span>
-                        {% empty %}
-                            <span class = "text-muted">-</span>
-                        {% endfor %}
-                    </td>
+                    <th scope = "col">Item Name</th>
+                    <th scope = "col">Location</th>
+                    <th scope = "col">Status</th>
+                    <th scope = "col">Item Tag</th>
                 </tr>
-            {% empty %}
-                <tr>
-                    <td colspan="4" class="text-center">No results found.</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                    <tr>
+                        <td>{{ item.name }}</td>
+                        <td>{{ item.location }}</td>
+                        <td>{{ item.status }}</td>
+                        <td>
+                            {% for tag in item.tags.all %}
+                                <span class = "tag-label">{{ tag }}</span>
+                            {% empty %}
+                                <span class = "text-muted">-</span>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-center">No results found.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </section>
 
 {% endblock %}
