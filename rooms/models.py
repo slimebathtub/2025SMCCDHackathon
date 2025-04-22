@@ -4,6 +4,9 @@ from resources.models import ResourceEntity
 
 # Create your models here.
 class Room(ResourceEntity):
-    people_available = models.IntegerField()
+    capacity = models.IntegerField()
+
+    def __str__(self):
+        return self.name
 
     

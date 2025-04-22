@@ -22,13 +22,13 @@ def sourcepage_view(request):
     if name:
         items = items.filter(name__icontains=name)
 
-    tag_id = request.GET.get('tag')
-    if tag_id:
-        items = items.filter(tags__id=tag_id)
+    tag_name = request.GET.get('tag')
+    if tag_name:
+        items = items.filter(tags__name=tag_name)
 
-    loc_id = request.GET.get('location')
-    if loc_id:
-        items = items.filter(location__id=loc_id)
+    loc_name = request.GET.get('location')
+    if loc_name:
+        items = items.filter(location__name=loc_name)
 
     if request.GET.get('available'):
         items = items.filter(status='available')
