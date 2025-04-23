@@ -1,0 +1,23 @@
+<div class="p-4">
+    <form id="editItemForm" method="post" action="{% url 'item_edit_form' form.instance.id %}">
+        {% csrf_token %}
+        {% for field in form %}
+        <div class="mb-3">
+            <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+            {{ field }}
+            {% if field.help_text %}
+            <div class="form-text">{{ field.help_text }}</div>
+            {% endif %}
+            {% for error in field.errors %}
+            <div class="text-danger">{{ error }}</div>
+            {% endfor %}
+            {% if field.name == "tags" %}
+            <div class="form-text text-muted">(Press Ctrl or ⌘ to select multiple tags)</div>
+            {% endif %}
+        </div>
+        {% endfor %}
+        <div class="text-center mt-4">
+        <button type="submit" class="btn btn-primary px-4">Save</button>
+        </div>
+    </form>
+</div>

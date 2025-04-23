@@ -65,7 +65,13 @@
                                     {% endfor %}
                                 </td>
                                 <td>
-                                    <button class="btn btn-sm btn-outline-secondary me-1" title="Edit">
+                                    <button
+                                        class="btn btn-sm btn-outline-secondary me-1"
+                                        data-url="{% url 'item_edit_form' item.id %}"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#editItemModal"
+                                        title="Edit"
+                                        >
                                         <i class="fas fa-pencil-alt"></i>
                                     </button>
                                     <button class="btn btn-sm btn-outline-danger" title="Delete">
@@ -117,5 +123,62 @@
         </div>
     </div>
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="editItemModal" tabindex="-1" aria-labelledby="editItemLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="editItemModalBody">
+        <!-- Form content will be loaded here via JavaScript -->
+        </div>
+    </div>
+</div>
+
+<!-- show jump out model-->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const modal = document.getElementById('editItemModal');
+        modal.addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget;
+        const url = button.getAttribute('data-url');
+        const modalBody = document.getElementById('editItemModalBody');
+
+        fetch(url)
+            .then(response => response.text())
+            .then(html => {
+            modalBody.innerHTML = html;
+            });
+        });
+    });
+</script>
+
+<!-- submitted fetch-->
+<script>
+document.addEventListener('submit', function (event) {
+    const form = event.target;
+    if (form.id === 'editItemForm') {
+    event.preventDefault();
+
+    fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: {
+        'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => {
+        if (response.ok) {
+        const modal = bootstrap.Modal.getInstance(document.getElementById('editItemModal'));
+        modal.hide();
+        window.location.reload(); // 或者動態更新表格
+        } else {
+        return response.text().then(html => {
+            document.getElementById('editItemModalBody').innerHTML = html;
+        });
+        }
+    });
+    }
+});
+</script>
+
 {% endblock %}
 
