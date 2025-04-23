@@ -3,8 +3,11 @@ from django.core.management.base import BaseCommand
 from tutoring.models import TutoringDailySchedule
 from logic.MRCParser import MRC_create_weekday_dfs
 from logic.LCParser import LC_create_weekday_dfs
-
+from logic.ISCParser import ISC_create_weekday_dfs
+from logic.TimeHandler import time_handler as th
+import pandas as pd
 objs = []
+WEEK_DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
 def check(week_dfs):
     global objs
     for day, df in week_dfs.items():
@@ -26,10 +29,13 @@ class Command(BaseCommand):
         # e.g. weeek_dfs["Monday"] = whatever schedule we have for Monday
         mrc_week_dfs = MRC_create_weekday_dfs()
         lc_week_dfs = LC_create_weekday_dfs()
-            
-        # new instances
-        check(mrc_week_dfs)
-        check(lc_week_dfs)
+        isc_week_dfs = ISC_create_weekday_dfs()
+        week_dfs = dict()
+        for day in WEEK_DAYS:
+            week_dfs[day] = pd.concat([mrc_week_dfs[day], lc_week_dfs[day], isc_week_dfs[day]])
+            week_dfs[day] = th(week_dfs[day])
+        
+        check(week_dfs)
     
         # bulk‐create them
         TutoringDailySchedule.objects.bulk_create(objs)
