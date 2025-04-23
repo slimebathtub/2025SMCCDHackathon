@@ -11,9 +11,6 @@ def room_list_view(request):
     
     rooms = Room.objects.all()
 
-    print("🔍 GET Params:", request.GET)
-    print("Filtered queryset:", rooms.query)
-
     all_locations = Center.objects.all()
     
     capacity = request.GET.get('capacity')

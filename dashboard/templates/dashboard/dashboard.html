@@ -1,0 +1,97 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block title %}Resources{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/sourcepageStyle.css' %}">
+{% endblock %}
+
+{% block image_url %}
+{% with image_path='images/titleimage.jpg' %}
+{% endwith %}
+{% endblock %}
+
+{% block content %}
+<!--Welcome-->
+<div class="container mt-5">
+    <h2>Welcome, _____ </h2>
+</div>
+
+<!--side dash board-->
+<div class="container mt-5">
+    <div class="row">
+
+        <div class="col-md-3">
+            <div class = "sidebar">
+                <p class="sidebar-title">Dash Board</p>
+                <div class="sidebar-content">
+                    <button class="btn btn-light w-100 mb-2">Sources List</button>
+                    <button class="btn btn-light w-100 mb-2">Room List</button>
+                    <button class="btn btn-light w-100 mb-2">event List</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div class="content">
+                <!--main content: Tables-->
+                <h2 class="fw-bold">Item Table</h2>
+                <table class="table table-bordered mb-5">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Status</th>
+                            <th>Tags</th>
+                            <th>Edit</th>
+                        </tr>
+                    </thead>
+                        <tbody>
+                            <tr>
+                                <td>Item 1</td>
+                                <td>Status 1</td>
+                                <td>
+                                    <span class="badge bg-secondary">Tag 1</span>
+                                    <span class="badge bg-secondary">Tag 2</span>
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-secondary me-1" title="Edit">
+                                        <i class="fas fa-pencil-alt"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-danger" title="Delete">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </td>
+                        </tbody>
+                </table>
+                
+
+                <h2 class="fw-bold">Tutor Time Table</h2>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Subject</th>
+                            <th>Class</th>
+                            <th>Time</th>
+                            <th>Edit</th>
+                        </tr>
+                    </thead>
+                        <tbody>
+                            <tr>
+                                <td>Math</td>
+                                <td>General Math</td>
+                                <td>10:00 AM - 11:00 AM</td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-secondary me-1" title="Edit">
+                                        <i class="fas fa-pencil-alt"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-danger" title="Delete">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </td>
+                        </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
