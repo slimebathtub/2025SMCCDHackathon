@@ -25,9 +25,9 @@
             <div class = "sidebar">
                 <p class="sidebar-title">Dash Board</p>
                 <div class="sidebar-content">
-                    <button class="btn btn-light w-100 mb-2 active">Sources List</button>
-                    <button class="btn btn-light w-100 mb-2">Room List</button>
-                    <button class="btn btn-light w-100 mb-2">event List</button>
+                    <a href="{% url 'dashboard' %}" class="btn btn-light w-100 mb-2 {% if request.path == '/dashboard/' %}active{% endif %}">Sources List</a>
+                    <a href="{% url 'room_manage' %}" class="btn btn-light w-100 mb-2 {% if request.path == '/dashboard/room/' %}active{% endif %}">Room List</a>
+                    <a href="#" class="btn btn-light w-100 mb-2">Event List</a>
                 </div>
             </div>
         </div>
@@ -153,7 +153,7 @@
             modalBody.innerHTML = html;
             });
         });
-        
+
         console.log("即將刪除的網址：", deleteUrl);
     });
 </script>
