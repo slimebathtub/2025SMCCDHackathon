@@ -3,7 +3,7 @@
 {% block title %}Resources{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/sourcepageStyle.css' %}">
+<link rel="stylesheet" href="{% static 'css/dashboardstyle.css' %}">
 {% endblock %}
 
 {% block image_url %}
@@ -19,18 +19,20 @@
 
 <!--side dash board-->
 <div class="container mt-5">
-    <div class="row">
+    <div class="row g-4">
 
-        <div class="col-md-3">
+        <div class="col-md ms-md-6">
             <div class = "sidebar">
                 <p class="sidebar-title">Dash Board</p>
                 <div class="sidebar-content">
-                    <button class="btn btn-light w-100 mb-2">Sources List</button>
+                    <button class="btn btn-light w-100 mb-2 active">Sources List</button>
                     <button class="btn btn-light w-100 mb-2">Room List</button>
                     <button class="btn btn-light w-100 mb-2">event List</button>
                 </div>
             </div>
         </div>
+
+        <!--main content-->
         <div class="col-md-9">
             <div class="content">
                 <!--main content: Tables-->
@@ -45,12 +47,22 @@
                         </tr>
                     </thead>
                         <tbody>
+                            {% for item in items %}
                             <tr>
-                                <td>Item 1</td>
-                                <td>Status 1</td>
+                                <td>{{ item.name }}</td>
                                 <td>
-                                    <span class="badge bg-secondary">Tag 1</span>
-                                    <span class="badge bg-secondary">Tag 2</span>
+                                    {% if item.status == 'available' %}
+                                        <span>🟢 Available</span>
+                                    {% else %}
+                                        <span>🔴 Not Available</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% for tag in item.tags.all %}
+                                        <span class="badge bg-secondary">{{ tag.name }}</span>
+                                    {% empty %}
+                                        <span class="text-muted">No tags</span>
+                                    {% endfor %}
                                 </td>
                                 <td>
                                     <button class="btn btn-sm btn-outline-secondary me-1" title="Edit">
@@ -60,10 +72,15 @@
                                         <i class="fas fa-trash-alt"></i>
                                     </button>
                                 </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4"><em>No items</em></td>
+                            </tr>
+                            {% endfor %}
                         </tbody>
                 </table>
                 
-
                 <h2 class="fw-bold">Tutor Time Table</h2>
                 <table class="table table-bordered">
                     <thead>
@@ -75,10 +92,11 @@
                         </tr>
                     </thead>
                         <tbody>
+                            {% for t in tutor_session %}
                             <tr>
-                                <td>Math</td>
-                                <td>General Math</td>
-                                <td>10:00 AM - 11:00 AM</td>
+                                <td>{{ t.subject }}</td>
+                                <td>{{ t.courses }}</td>
+                                <td>{{ t.time }}</td>
                                 <td>
                                     <button class="btn btn-sm btn-outline-secondary me-1" title="Edit">
                                         <i class="fas fa-pencil-alt"></i>
@@ -87,6 +105,12 @@
                                         <i class="fas fa-trash-alt"></i>
                                     </button>
                                 </td>
+                            </tr>
+                            {% empty %}
+                                <tr>
+                                    <td colspan="4"><em>No tutor times available </em></td>
+                                </tr>
+                            {% endfor %}
                         </tbody>
                 </table>
             </div>
