@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.views.decorators.csrf import csrf_exempt
 
-from resources.models import Item
+from resources.models import Item, Tag
 from core.models import Center
 from rooms.models import Room
 from tutoring.models import TutoringDailySchedule
@@ -25,6 +25,20 @@ def item_edit_form(request, item_id):
         form = ItemForm(request.POST, instance=item)
         if form.is_valid():
             form.save()
+            # If user create a new teg
+            new_tag_str = form.cleaned_data.get('new_tags', "")
+            if new_tag_str:
+                tag_names = []
+                name_sep = new_tag_str.split(',')
+                for name in name_sep:
+                    cleaned = name.strip()
+                    if cleaned:
+                        tag_names.append(cleaned)
+
+                for name in tag_names:
+                    tag, created = Tag.objects.get_or_create(name=name)
+                    item.tags.add(tag)
+
             return HttpResponse(status=204)
         else:
             return render(request, 'dashboard/item_edit_form.html', {'form': form})
@@ -38,7 +52,18 @@ def item_create_form(request):
     if request.method == 'POST':
         form = ItemForm(request.POST)
         if form.is_valid():
-            form.save()
+            item = form.save()
+            # If user create a new teg
+            new_tag_str = form.cleaned_data.get('new_tags', "")
+            if new_tag_str:
+                tag_names = []
+                for name in new_tag_str.split(','):
+                    cleaned = name.strip()
+                    if cleaned:
+                        tag_names.append(cleaned)
+                for name in tag_names:
+                    tag, created = Tag.objects.get_or_create(name=name)
+                    item.tags.add(tag)
             return HttpResponse(status=204)
         else:
             return render(request, 'dashboard/item_edit_form.html', {'form': form})
