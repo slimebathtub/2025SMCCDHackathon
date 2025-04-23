@@ -3,6 +3,12 @@ from resources.models import Item
 from rooms.models import Room
 
 class ItemForm(forms.ModelForm):
+    new_tags = forms.CharField(
+        label='New Tags',
+        required=False,
+        help_text='Enter new tags (separated by commas)',
+        widget=forms.TextInput(attrs={'placeholder': 'Enter new tags'})
+    )
     class Meta:
         model = Item
         fields = ['name', 'status', 'tags', 'location']
