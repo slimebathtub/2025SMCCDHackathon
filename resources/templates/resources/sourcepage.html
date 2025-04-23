@@ -6,11 +6,19 @@
 <link rel="stylesheet" href="{% static 'css/sourcepageStyle.css' %}">
 {% endblock %}
 
+{% block image_url %}
+{% with image_path='images/titleimage.jpg' %}
+{% endwith %}
+{% endblock %}
+
+
 {% block content %}
 <!-- This is the content block for the resources page -->
 <section class = "intro-section">
     <div class = "row">
-        <div class = "image-placeholder"></div>
+        <div class="image-placeholder">
+            <img src="{% static 'images/titleimage.jpg' %}" alt="resources" class="img-fluid rounded">
+        </div>
         <div class = "intro-text">
             <h1>Resources</h1>
             <p>
@@ -19,6 +27,115 @@
             and check the current status of all learning materials.
             </p>
         </div>
+    </div>
+</section>
+<section class = "search-section ">
+    <form method="get" action="{% url 'resources-list' %}">
+    <div class = "container">
+        <h2>Search</h2>
+        <div class="row justify-content-between align-items-center">
+            <div class = "col-md-3">
+                <label for="search-name" class = "form-label">Devices Name</label>
+                <!-- This is the search input field for device name -->
+                <input
+                    type = "text"
+                    class = "form-control"
+                    name = "name"
+                    id = "search-name"
+                    placeholder="Enter device name"
+                    value = "{{ request.GET.name }}"
+                >
+            </div>
+                <!-- This is the search input filed for Devices Tag-->
+            <div class = "col-md-3">
+                <label for="search-tag" class = "form-label">Devices Tag</label>
+                <select
+                    id = "search-tag"
+                    class = "form-select"
+                    name = "tag"
+                >
+                <option value = "">All</option>
+                {% for tag in tags %}
+                    <option value = "{{ tag.name }}" {% if request.GET.tag == tag.name %}selected{% endif %}>{{ tag.name }}</option>
+                {% endfor %}
+                </select>
+            </div>
+                <!-- This is the search input filed for location -->
+            <div class = "col-md-3">
+                <label for="search-location" class = "form-label">Location</label>
+                <select
+                    id = "search-location"
+                    class = "form-select"
+                    name = "location"
+                >
+                <option value = "">All</option>
+                {% for location in locations %}
+                    <option value = "{{ location.name }}" {% if request.GET.location == location.name %}selected{% endif %}>{{ location.name }}</option>
+                {% endfor %}
+                </select>
+            </div>
+        </div>
+        <!-- This is the search switching button for Devices Status -->
+        <div class="row justify-content-between align-items-center mt-3">
+            <div class = "col-auto">
+                <div class = "form-check form-switch">
+                    <input
+                        type = "checkbox"
+                        class = "form-check-input"
+                        id = "search-available"
+                        name = "available"
+                        {% if request.GET.available %}checked{% endif %}
+                    >
+                    <label for="search-available" class = "form-check-label">Only Show Available</label>
+                </div>
+            </div>
+            <div class = "col-auto">
+                <button type = "submit" class = "btn btn-primary">Search</button>
+            </div>
+        </div>
+    </div>
+    </form>
+</section>
+
+<section class = "results-section container mt-5">
+    <table class = "table table-striped">
+        <div class="table-wrapper">
+            <table class = "table table-striped">
+            <thead>
+                <tr>
+                    <th scope = "col">Item Name</th>
+                    <th scope = "col">Location</th>
+                    <th scope = "col">Status</th>
+                    <th scope = "col">Item Tag</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                    <tr>
+                        <td>{{ item.name }}</td>
+                        <td>{{ item.location }}</td>
+                        <td>
+                            {% if item.status == 'available' %}
+                                <span>🟢 Available </span>
+                            {% else %}
+                                <span>🔴 Not Available </span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% for tag in item.tags.all %}
+                                <span class = "tag-label">{{ tag }}</span>
+                            {% empty %}
+                                <span class = "text-muted">-</span>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-center">No results found.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 </section>
 

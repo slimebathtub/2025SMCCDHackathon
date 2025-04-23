@@ -43,5 +43,8 @@ class Item(ResourceEntity):
     def modify_tags(self, new_tags):
         self.tags.set(new_tags)
         self.save()
+    
+    def __str__(self):
+        return self.name
 
 

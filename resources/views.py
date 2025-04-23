@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
 from core.models import Center
@@ -10,22 +11,39 @@ from django.contrib.auth.decorators import login_required
 def resources_view(request):
     return render(request, 'resources/sourcepage.html')
 
-@login_required
-def center_item_list(request):
-    center = Center.objects.get(user=request.user)
-    items = Item.objects.filter(location=center)
-    return render(request, 'resources/itemlist.html', {'items': items})
+def center_item_list(reques):
+    return
 
-@login_required
-def update_item(request, item_id):
-    center = Center.objects.get(user=request.user)
-    item = get_object_or_404(Item, id=item_id, location=center)
+def sourcepage_view(request):
+    items = Item.objects.all()
+    
+    # Apply search filters
+    name = request.GET.get('name')
+    if name:
+        items = items.filter(name__icontains=name)
 
-    if request.method == 'POST':
-        form = ItemForm(request.POST, instance=item)
-        if form.is_valid():
-            form.save()
-            return redirect('resources:itemlist')
-    else:
-        form = ItemForm(instance=item)
-    return render(request, 'resources/updateitem.html', {'form': form})
+    tag_name = request.GET.get('tag')
+    if tag_name:
+        items = items.filter(tags__name=tag_name)
+
+    loc_name = request.GET.get('location')
+    if loc_name:
+        items = items.filter(location__name=loc_name)
+
+    if request.GET.get('available'):
+        items = items.filter(status='available')
+
+    if request.GET.get('unavailable'):
+        items = items.filter(status='unavailable')
+
+    from .models import Tag
+    from core.models import Center
+    tags = Tag.objects.all()
+    locations = Center.objects.all()
+
+    return render(request, 'resources/sourcepage.html', {
+        'items': items,
+        'tags': tags,
+        'locations': locations,
+        'request': request,
+    })

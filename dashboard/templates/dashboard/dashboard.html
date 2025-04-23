@@ -1,0 +1,224 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block title %}Resources{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/dashboardstyle.css' %}">
+{% endblock %}
+
+{% block image_url %}
+{% with image_path='images/titleimage.jpg' %}
+{% endwith %}
+{% endblock %}
+
+{% block content %}
+<!--Welcome-->
+<div class="container mt-5">
+    <h2>Welcome, _____ </h2>
+</div>
+
+<!--side dash board-->
+<div class="container mt-5">
+    <div class="row g-4">
+
+        <div class="col-md ms-md-6">
+            <div class = "sidebar">
+                <p class="sidebar-title">Dash Board</p>
+                <div class="sidebar-content">
+                    <a href="{% url 'dashboard' %}" class="btn btn-light w-100 mb-2 {% if request.path == '/dashboard/' %}active{% endif %}">Sources List</a>
+                    <a href="{% url 'room_manage' %}" class="btn btn-light w-100 mb-2 {% if request.path == '/dashboard/room/' %}active{% endif %}">Room List</a>
+                    <a href="#" class="btn btn-light w-100 mb-2">Event List</a>
+                </div>
+            </div>
+        </div>
+
+        <!--main content-->
+        <div class="col-md-9">
+            <div class="content">
+                <!--main content: Tables-->
+                <h2 class="fw-bold">Item Table</h2>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Status</th>
+                            <th>Tags</th>
+                            <th>Edit</th>
+                        </tr>
+                    </thead>
+                        <tbody>
+                            {% for item in items %}
+                            <tr>
+                                <td>{{ item.name }}</td>
+                                <td>
+                                    {% if item.status == 'available' %}
+                                        <span>🟢 Available</span>
+                                    {% else %}
+                                        <span>🔴 Not Available</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% for tag in item.tags.all %}
+                                        <span class="badge bg-secondary">{{ tag.name }}</span>
+                                    {% empty %}
+                                        <span class="text-muted">No tags</span>
+                                    {% endfor %}
+                                </td>
+                                <td>
+                                    <button
+                                        class="btn btn-sm btn-outline-secondary me-1"
+                                        data-url="{% url 'item_edit_form' item.id %}"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#editItemModal"
+                                        title="Edit"
+                                        >
+                                        <i class="fas fa-pencil-alt"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-danger"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#deleteConfirmModal"
+                                        data-url="{% url 'generic_delete' 'item' item.id %}"
+                                        title="Delete">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4"><em>No items</em></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                </table>
+
+                <div class="d-flex justify-content-end mb-3">
+                    <button class="btn btn-primary"
+                        data-url="{% url 'item_create_form' %}"
+                        data-bs-toggle="modal"
+                        data-bs-target="#editItemModal"> Add Item
+                    </button>
+                </div>
+
+                <h2 class="fw-bold">Tutor Time Table</h2>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Subject</th>
+                            <th>Class</th>
+                            <th>Time</th>
+                        </tr>
+                    </thead>
+                        <tbody>
+                            {% for t in tutor_session %}
+                            <tr>
+                                <td>{{ t.subject }}</td>
+                                <td>{{ t.courses }}</td>
+                                <td>{{ t.time }}</td>
+                            </tr>
+                            {% empty %}
+                                <tr>
+                                    <td colspan="4"><em>No tutor times available </em></td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="editItemModal" tabindex="-1" aria-labelledby="editItemLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="editItemModalBody">
+        <!-- Form content will be loaded here via JavaScript -->
+        </div>
+    </div>
+</div>
+
+{% include "dashboard/delete_form.html" %}
+
+<!-- show jump out model-->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const modal = document.getElementById('editItemModal');
+        modal.addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget;
+        const url = button.getAttribute('data-url');
+        const modalBody = document.getElementById('editItemModalBody');
+
+        fetch(url)
+            .then(response => response.text())
+            .then(html => {
+            modalBody.innerHTML = html;
+            });
+        });
+    });
+</script>
+
+<!-- submitted fetch-->
+<script>
+document.addEventListener('submit', function (event) {
+    const form = event.target;
+    if (form.id === 'editItemForm') {
+    event.preventDefault();
+
+    fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: {
+        'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => {
+        if (response.ok) {
+        const modal = bootstrap.Modal.getInstance(document.getElementById('editItemModal'));
+        modal.hide();
+        window.location.reload();
+        } else {
+        return response.text().then(html => {
+            document.getElementById('editItemModalBody').innerHTML = html;
+        });
+        }
+    });
+    }
+});
+</script>
+
+<!-- Delete Modal -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        let deleteUrl = null;
+        const deleteModal = document.getElementById('deleteConfirmModal');
+        if (deleteModal) {
+            deleteModal.addEventListener('show.bs.modal', function (event) {
+                const button = event.relatedTarget;
+                deleteUrl = button.getAttribute('data-url');
+            });
+
+            const confirmBtn = document.getElementById('confirmDeleteBtn');
+            if (confirmBtn) {
+                confirmBtn.addEventListener('click', function () {
+                    if (deleteUrl) {
+                        fetch(deleteUrl, {
+                            method: 'POST',
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest',
+                                'X-CSRFToken': '{{ csrf_token }}'
+                            }
+                        }).then(response => {
+                            if (response.ok) {
+                                const modal = bootstrap.Modal.getInstance(deleteModal);
+                                modal.hide();
+                                window.location.reload();
+                            }
+                        });
+                    }
+                });
+            }
+        }
+    });
+</script>
+
+{% endblock %}
+

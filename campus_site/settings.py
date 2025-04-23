@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     "resources",
     "rooms",
     "tutoring",
+    "dashboard",
 ]
 
 MIDDLEWARE = [
