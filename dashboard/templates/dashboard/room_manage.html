@@ -25,8 +25,8 @@
             <div class = "sidebar">
                 <p class="sidebar-title">Dash Board</p>
                 <div class="sidebar-content">
-                    <button class="btn btn-light w-100 mb-2 active">Sources List</button>
-                    <button class="btn btn-light w-100 mb-2">Room List</button>
+                    <button class="btn btn-light w-100 mb-2">Sources List</button>
+                    <button class="btn btn-light w-100 mb-2 active">Room List</button>
                     <button class="btn btn-light w-100 mb-2">event List</button>
                 </div>
             </div>
@@ -36,40 +36,34 @@
         <div class="col-md-9">
             <div class="content">
                 <!--main content: Tables-->
-                <h2 class="fw-bold">Item Table</h2>
+                <h2 class="fw-bold">Room Table</h2>
                 <table class="table table-bordered">
                     <thead>
                         <tr>
                             <th>Name</th>
                             <th>Status</th>
-                            <th>Tags</th>
+                            <th>Capacity</th>
                             <th>Edit</th>
                         </tr>
                     </thead>
                         <tbody>
-                            {% for item in items %}
+                            {% for room in rooms %}
                             <tr>
-                                <td>{{ item.name }}</td>
+                                <td>{{ room.name }}</td>
                                 <td>
-                                    {% if item.status == 'available' %}
+                                    {% if room.status == 'available' %}
                                         <span>🟢 Available</span>
                                     {% else %}
                                         <span>🔴 Not Available</span>
                                     {% endif %}
                                 </td>
-                                <td>
-                                    {% for tag in item.tags.all %}
-                                        <span class="badge bg-secondary">{{ tag.name }}</span>
-                                    {% empty %}
-                                        <span class="text-muted">No tags</span>
-                                    {% endfor %}
-                                </td>
+                                <td>{{ room.capacity }}</td>
                                 <td>
                                     <button
                                         class="btn btn-sm btn-outline-secondary me-1"
-                                        data-url="{% url 'item_edit_form' item.id %}"
+                                        data-url="{% url 'room_edit_form' room.id %}"
                                         data-bs-toggle="modal"
-                                        data-bs-target="#editItemModal"
+                                        data-bs-target="#editRoomModal"
                                         title="Edit"
                                         >
                                         <i class="fas fa-pencil-alt"></i>
@@ -77,7 +71,7 @@
                                     <button class="btn btn-sm btn-outline-danger"
                                         data-bs-toggle="modal"
                                         data-bs-target="#deleteConfirmModal"
-                                        data-url="{% url 'generic_delete' 'item' item.id %}"
+                                        data-url="{% url 'generic_delete' 'room' room.id %}"
                                         title="Delete">
                                         <i class="fas fa-trash-alt"></i>
                                     </button>
@@ -85,7 +79,7 @@
                             </tr>
                             {% empty %}
                             <tr>
-                                <td colspan="4"><em>No items</em></td>
+                                <td colspan="4"><em>No rooms</em></td>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -93,44 +87,21 @@
 
                 <div class="d-flex justify-content-end mb-3">
                     <button class="btn btn-primary"
-                        data-url="{% url 'item_create_form' %}"
+                        data-url="{% url 'room_create_form' %}"
                         data-bs-toggle="modal"
-                        data-bs-target="#editItemModal"> Add Item
+                        data-bs-target="#editRoomModal"> Add Room
                     </button>
                 </div>
 
-                <h2 class="fw-bold">Tutor Time Table</h2>
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>Subject</th>
-                            <th>Class</th>
-                            <th>Time</th>
-                        </tr>
-                    </thead>
-                        <tbody>
-                            {% for t in tutor_session %}
-                            <tr>
-                                <td>{{ t.subject }}</td>
-                                <td>{{ t.courses }}</td>
-                                <td>{{ t.time }}</td>
-                            </tr>
-                            {% empty %}
-                                <tr>
-                                    <td colspan="4"><em>No tutor times available </em></td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                </table>
             </div>
         </div>
     </div>
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="editItemModal" tabindex="-1" aria-labelledby="editItemLabel" aria-hidden="true">
+<div class="modal fade" id="editRoomModal" tabindex="-1" aria-labelledby="editRoomLabel" aria-hidden="true">
     <div class="modal-dialog">
-        <div class="modal-content" id="editItemModalBody">
+        <div class="modal-content" id="editRoomModalBody">
         <!-- Form content will be loaded here via JavaScript -->
         </div>
     </div>
@@ -141,11 +112,11 @@
 <!-- show jump out model-->
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const modal = document.getElementById('editItemModal');
+        const modal = document.getElementById('editRoomModal');
         modal.addEventListener('show.bs.modal', function (event) {
         const button = event.relatedTarget;
         const url = button.getAttribute('data-url');
-        const modalBody = document.getElementById('editItemModalBody');
+        const modalBody = document.getElementById('editRoomModalBody');
 
         fetch(url)
             .then(response => response.text())
@@ -153,8 +124,6 @@
             modalBody.innerHTML = html;
             });
         });
-        
-        console.log("即將刪除的網址：", deleteUrl);
     });
 </script>
 
@@ -162,7 +131,7 @@
 <script>
 document.addEventListener('submit', function (event) {
     const form = event.target;
-    if (form.id === 'editItemForm') {
+    if (form.id === 'editRoomForm') {
     event.preventDefault();
 
     fetch(form.action, {
@@ -174,12 +143,12 @@ document.addEventListener('submit', function (event) {
     })
     .then(response => {
         if (response.ok) {
-        const modal = bootstrap.Modal.getInstance(document.getElementById('editItemModal'));
+        const modal = bootstrap.Modal.getInstance(document.getElementById('editRoomModal'));
         modal.hide();
         window.location.reload();
         } else {
         return response.text().then(html => {
-            document.getElementById('editItemModalBody').innerHTML = html;
+            document.getElementById('editRoomModalBody').innerHTML = html;
         });
         }
     });
@@ -189,37 +158,31 @@ document.addEventListener('submit', function (event) {
 
 <!-- Delete Modal -->
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        let deleteUrl = null;
-        const deleteModal = document.getElementById('deleteConfirmModal');
-        if (deleteModal) {
-            deleteModal.addEventListener('show.bs.modal', function (event) {
-                const button = event.relatedTarget;
-                deleteUrl = button.getAttribute('data-url');
-            });
-
-            const confirmBtn = document.getElementById('confirmDeleteBtn');
-            if (confirmBtn) {
-                confirmBtn.addEventListener('click', function () {
-                    if (deleteUrl) {
-                        fetch(deleteUrl, {
-                            method: 'POST',
-                            headers: {
-                                'X-Requested-With': 'XMLHttpRequest',
-                                'X-CSRFToken': '{{ csrf_token }}'
-                            }
-                        }).then(response => {
-                            if (response.ok) {
-                                const modal = bootstrap.Modal.getInstance(deleteModal);
-                                modal.hide();
-                                window.location.reload();
-                            }
-                        });
-                    }
-                });
+    let deleteUrl = null;
+    const deleteModal = document.getElementById('deleteConfirmModal');
+    if (deleteModal) {
+        deleteModal.addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget;
+        deleteUrl = button.getAttribute('data-url');
+        });
+        document.getElementById('confirmDeleteBtn').addEventListener('click', function () {
+        if (deleteUrl) {
+            fetch(deleteUrl, {
+            method: 'POST',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRFToken': '{{ csrf_token }}'
             }
+            }).then(response => {
+            if (response.ok) {
+                const modal = bootstrap.Modal.getInstance(deleteModal);
+                modal.hide();
+                window.location.reload();
+            }
+            });
         }
-    });
+        });
+    }
 </script>
 
 {% endblock %}
