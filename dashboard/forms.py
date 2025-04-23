@@ -4,7 +4,7 @@ from resources.models import Item
 class ItemForm(forms.ModelForm):
     class Meta:
         model = Item
-        fields = ['name', 'status', 'tags']
+        fields = ['name', 'status', 'tags', 'location']
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

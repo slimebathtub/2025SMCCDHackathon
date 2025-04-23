@@ -37,7 +37,7 @@
             <div class="content">
                 <!--main content: Tables-->
                 <h2 class="fw-bold">Item Table</h2>
-                <table class="table table-bordered mb-5">
+                <table class="table table-bordered">
                     <thead>
                         <tr>
                             <th>Name</th>
@@ -74,7 +74,11 @@
                                         >
                                         <i class="fas fa-pencil-alt"></i>
                                     </button>
-                                    <button class="btn btn-sm btn-outline-danger" title="Delete">
+                                    <button class="btn btn-sm btn-outline-danger"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#deleteConfirmModal"
+                                        data-url="{% url 'item_delete_form' item.id %}"
+                                        title="Delete">
                                         <i class="fas fa-trash-alt"></i>
                                     </button>
                                 </td>
@@ -86,7 +90,15 @@
                             {% endfor %}
                         </tbody>
                 </table>
-                
+
+                <div class="d-flex justify-content-end mb-3">
+                    <button class="btn btn-primary"
+                        data-url="{% url 'item_create_form' %}"
+                        data-bs-toggle="modal"
+                        data-bs-target="#editItemModal"> Add Item
+                    </button>
+                </div>
+
                 <h2 class="fw-bold">Tutor Time Table</h2>
                 <table class="table table-bordered">
                     <thead>
@@ -94,7 +106,6 @@
                             <th>Subject</th>
                             <th>Class</th>
                             <th>Time</th>
-                            <th>Edit</th>
                         </tr>
                     </thead>
                         <tbody>
@@ -103,14 +114,6 @@
                                 <td>{{ t.subject }}</td>
                                 <td>{{ t.courses }}</td>
                                 <td>{{ t.time }}</td>
-                                <td>
-                                    <button class="btn btn-sm btn-outline-secondary me-1" title="Edit">
-                                        <i class="fas fa-pencil-alt"></i>
-                                    </button>
-                                    <button class="btn btn-sm btn-outline-danger" title="Delete">
-                                        <i class="fas fa-trash-alt"></i>
-                                    </button>
-                                </td>
                             </tr>
                             {% empty %}
                                 <tr>
@@ -132,6 +135,9 @@
         </div>
     </div>
 </div>
+
+<!-- Delete Confirm Modal -->
+{% include "dashboard/item_delete_form.html" %}
 
 <!-- show jump out model-->
 <script>
@@ -169,7 +175,7 @@ document.addEventListener('submit', function (event) {
         if (response.ok) {
         const modal = bootstrap.Modal.getInstance(document.getElementById('editItemModal'));
         modal.hide();
-        window.location.reload(); // 或者動態更新表格
+        window.location.reload();
         } else {
         return response.text().then(html => {
             document.getElementById('editItemModalBody').innerHTML = html;
@@ -178,6 +184,35 @@ document.addEventListener('submit', function (event) {
     });
     }
 });
+</script>
+
+<!-- Delete Modal -->
+<script>
+    let deleteUrl = null;
+    const deleteModal = document.getElementById('deleteConfirmModal');
+    if (deleteModal) {
+        deleteModal.addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget;
+        deleteUrl = button.getAttribute('data-url');
+        });
+        document.getElementById('confirmDeleteBtn').addEventListener('click', function () {
+        if (deleteUrl) {
+            fetch(deleteUrl, {
+            method: 'POST',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRFToken': '{{ csrf_token }}'
+            }
+            }).then(response => {
+            if (response.ok) {
+                const modal = bootstrap.Modal.getInstance(deleteModal);
+                modal.hide();
+                window.location.reload();
+            }
+            });
+        }
+        });
+    }
 </script>
 
 {% endblock %}

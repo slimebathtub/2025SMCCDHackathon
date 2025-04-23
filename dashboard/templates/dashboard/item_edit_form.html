@@ -1,5 +1,5 @@
 <div class="p-4">
-    <form id="editItemForm" method="post" action="{% url 'item_edit_form' form.instance.id %}">
+    <form id="editItemForm" method="post" action="{% if form.instance.id %}{% url 'item_edit_form' form.instance.id %}{% else %}{% url 'item_create_form' %}{% endif %}">
         {% csrf_token %}
         {% for field in form %}
         <div class="mb-3">
