@@ -26,6 +26,6 @@ def login_page(request):
             return redirect('/login/')
         else:
             login(request, user)
-            return redirect('/#/')
+            return redirect('/dashboard/')
 
     return render(request, 'login.html')
