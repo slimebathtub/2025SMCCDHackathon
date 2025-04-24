@@ -1,7 +1,6 @@
 /* static/css/navbar.css */
 /* ensure page content sits below the fixed navbar */
 body {
-    padding-top: var(--navbar-height);
     background-color: var(--background-color);
   }
   
