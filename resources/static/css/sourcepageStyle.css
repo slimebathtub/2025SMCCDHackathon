@@ -1,8 +1,5 @@
 /* first section: intro section */
 
-.intro-section{
-    padding-top: 0px;
-}
 .intro-section .row {
     width: 90%;
     margin: 2rem auto;
@@ -44,11 +41,14 @@
 }
 
 
-.map-section .container{
-    max-width: 60%;
-    height: 60%;
-    object-fit: cover;
-    border-radius: 8px;
+.map-section .container {
+    max-width: 90%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 2rem;
+    padding: 40px 40px;
 }
 
 .map-section img {
@@ -204,4 +204,36 @@
     text-align: left;
     padding: 0.5rem 1rem;
     font-size: 1rem;
+}
+
+/* adjust the table header */
+/* Blue-white striped table styles */
+
+.center-table {
+    flex: 0 0 40%;
+    border-collapse: collapse;
+    margin-top: 2rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    
+}
+
+.center-table th,
+.center-table td {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border: 1px solid #ccc;
+}
+
+.center-table th {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.center-table tr:nth-child(even) {
+    background-color: #f2f8ff;
+}
+
+.center-table tr:nth-child(odd) {
+    background-color: #ffffff;
 }

@@ -27,7 +27,7 @@
 
 /* static/css/card.css */
 .card-image {
-  height: 160px;
+  aspect-ratio: 16 / 9;
   width: 100%;
   background-size: cover;
   background-position: center;

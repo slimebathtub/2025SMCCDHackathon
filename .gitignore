@@ -13,10 +13,10 @@ __pycache__/
 # MacOS system files
 .DS_Store
 
-# Database / migration cache (視情況使用)
+# Database / migration cache
 *.sqlite3
 *.log
 *.pot
 
-# Django static files (如有 collectstatic)
+# Django static files
 staticfiles/
