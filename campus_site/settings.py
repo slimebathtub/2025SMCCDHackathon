@@ -31,6 +31,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     "resources-at-csm.onrender.com",
+    "127.0.0.1",
+    "localhost",
 ]
 
 
