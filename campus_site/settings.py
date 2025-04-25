@@ -149,3 +149,9 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # just for testing
 LOGIN_REDIRECT_URL = '/items/'
+
+
+# Explicitly trust deployed domain for CSRF protection
+CSRF_TRUSTED_ORIGINS = [
+    "https://resources-at-csm.onrender.com"
+]
