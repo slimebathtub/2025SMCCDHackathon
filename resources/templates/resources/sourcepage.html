@@ -30,11 +30,39 @@
     </div>
 </section>
 
+<!-- This is the map section for the resources page -->
+<!--
 <section class="map-section py-5">
     <div class="container">
-        <img src="{% static 'images/schoolmap.jpg' %}" alt="Campus Map" class="img-fluid rounded">
+        <div class="row align-items-start">
+            <div class="col-md">
+                <table class="center-table w-100">
+                    <thead>
+                        <tr>
+                            <th>Center Name</th>
+                            <th>Center Location</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Science Learning Center</td>
+                            <td>Building A, Room 203</td>
+                        </tr>
+                        <tr>
+                            <td>Math Lab</td>
+                            <td>Building B, Room 105</td>
+                        </tr>
+                        <!-- 你可以繼續新增更多 row -->
+                    <!---
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md">
+                <img src="{% static 'images/schoolmap.jpg' %}" alt="Campus Map" class="img-fluid rounded">
+            </div>
+        </div>
     </div>
-</section>
+</section> -->
 
 <section class = "search-section ">
     <form method="get" action="{% url 'resources-list' %}">

@@ -27,16 +27,9 @@
 </section>
 {% endblock %}
 
-{% block map %}
-<section class="map-section py-5">
-    <div class="container">
-        <img src="{% static 'images/schoolmap.jpg' %}" alt="Campus Map" class="img-fluid rounded">
-    </div>
-</section>
-{% endblock %}
-
 
 {% block search %}
+
 <section class="search-section">
     <form method="get" action="{% url 'rooms-list' %}">
         <div class="container">
