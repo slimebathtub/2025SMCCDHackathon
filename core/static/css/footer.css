@@ -1,28 +1,35 @@
 /* static/css/footer.css */
 /* footer set */
 
-footer .container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    padding: 30px;
-}
-
 .footer {
-    background-color: var(--dark-blue);
+    background-color: var(--dark-blue); /* 對應 bg-dark */
+    color: white;
+    padding-top: 3rem;
+    padding-bottom: 3rem;
     font-family: 'Playfair Display', serif;
-    color: var(--footer-color);
+    
+}
+.footer .container {
+    margin: 2rem auto;
 }
 
-.footer-links a {
-    color: var(--basically-white);
+.footer h5 {
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.footer p {
+    color: #adb5bd;
+}
+
+.footer a {
+    color: #adb5bd;
     text-decoration: none;
-    font-weight: 500;
+    font-size: 1rem;
 }
 
-.footer-links a:hover {
-    color: var(--white);
+.footer a:hover {
+    color: #ffffff;
     text-decoration: underline;
 }
 

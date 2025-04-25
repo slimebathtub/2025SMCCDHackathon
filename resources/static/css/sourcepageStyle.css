@@ -1,4 +1,5 @@
 /* first section: intro section */
+
 .intro-section{
     padding-top: 0px;
 }
@@ -43,20 +44,38 @@
 }
 
 
+.map-section .container{
+    max-width: 60%;
+    height: 60%;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.map-section img {
+    max-width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 8px;
+    display: block;
+    margin: 0 auto;
+}
+
+
+
 /* secon section: intro section */
 .search-section {
     max-width: 80%;
-    margin: 2rem auto;
+    margin: 1rem auto;
     background-color: #f8f9fa;
     border-radius: 16px;
-    padding: 40px 40px;
+    padding: 2rem 2rem;
 }
 .search-section .row {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    gap: 5rem;
+    gap: 2rem;
     margin-bottom: 0.5rem;
 }
 .search-section h2 {
@@ -117,7 +136,6 @@
     flex: 1;
     max-width: 30%;
 }
-
 
 /* third section: table */
 .tag-label {

@@ -15,22 +15,23 @@
     <div class="container py-5 bg-overlay">
         <h1 class="display-4 fw-bold">Resources, at CSM</h1>
         <p class="lead">
-          Welcome! Here you can find all sorts of important resources offered at College of San Mateo.
+            Welcome! Here you can find all sorts of important resources offered at College of San Mateo.
         </p>
     </div>
 </section>
 
 <!-- Main Content Section -->
-<div class="container py-5">
-    <div class="pt-5">
-        <h2 class="fw-bold">Easy Find, Easy Book</h2>
+<div class="container py-5 mb-5">
+    <div class="main-content px-4 px-md-5">
+        <h2 class="fw-bold mt-4">Find It Fast, Use It Well</h2>
         <p class="text-muted">Which resources you want to find today?</p>
 
-        <div class="row mt-4">
+        <div class="row mt-4 gx-5 gy-4">
+
             <div class="col-md-4">
-                <a href="#" class="card-link text-decoration-none">
+                <a href="{% url 'resources-list' %}" class="card-link text-decoration-none">
                     <div class="p-4 border rounded text-center custom-card">
-                        <div class="bg-light mb-3" style="height: 120px;"></div>
+                        <div class="card-image resource-img mb-4"></div>
                         <h5>Resources</h5>
                         <p class="text-muted">Check what you can borrow from school</p>
                     </div>
@@ -38,11 +39,11 @@
             </div>
 
             <div class="col-md-4">
-                <a href="#" class="card-link text-decoration-none">
+                <a href="{% url 'rooms-list' %}" class="card-link text-decoration-none">
                     <div class="p-4 border rounded text-center custom-card">
-                        <div class="bg-light mb-3" style="height: 120px;"></div>
+                        <div class="card-image room-img mb-4"></div>
                         <h5>Meeting Room</h5>
-                        <p class="text-muted">Book meeting room or check which study room are available now</p>
+                        <p class="text-muted">Check any available room </p>
                     </div>
                 </a>
             </div>
@@ -50,9 +51,29 @@
             <div class="col-md-4">
                 <a href="#" class="card-link text-decoration-none">
                     <div class="p-4 border rounded text-center custom-card">
-                        <div class="bg-light mb-3" style="height: 120px;"></div>
+                        <div class="card-image event-img mb-4"></div>
                         <h5>Event</h5>
                         <p class="text-muted">Check what event is holding now</p>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-md-4">
+                <a href="#" class="card-link text-decoration-none">
+                    <div class="p-4 border rounded text-center custom-card">
+                        <div class="card-image club-img mb-4"></div>
+                        <h5>Club Meeting</h5>
+                        <p class="text-muted">Check what clubs we have today!</p>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-md-4">
+                <a href="{% url 'tutoring' %}" class="card-link text-decoration-none">
+                    <div class="p-4 border rounded text-center custom-card">
+                        <div class="card-image tutor-img mb-4"></div>
+                        <h5>Tutoring</h5>
+                        <p class="text-muted">Seeking tutor's help</p>
                     </div>
                 </a>
             </div>

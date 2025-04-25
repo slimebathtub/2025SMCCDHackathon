@@ -29,12 +29,19 @@
         </div>
     </div>
 </section>
+
+<section class="map-section py-5">
+    <div class="container">
+        <img src="{% static 'images/schoolmap.jpg' %}" alt="Campus Map" class="img-fluid rounded">
+    </div>
+</section>
+
 <section class = "search-section ">
     <form method="get" action="{% url 'resources-list' %}">
     <div class = "container">
         <h2>Search</h2>
         <div class="row justify-content-between align-items-center">
-            <div class = "col-md-3">
+            <div class = "col">
                 <label for="search-name" class = "form-label">Devices Name</label>
                 <!-- This is the search input field for device name -->
                 <input
@@ -47,7 +54,7 @@
                 >
             </div>
                 <!-- This is the search input filed for Devices Tag-->
-            <div class = "col-md-3">
+            <div class = "col">
                 <label for="search-tag" class = "form-label">Devices Tag</label>
                 <select
                     id = "search-tag"
@@ -89,7 +96,7 @@
                     <label for="search-available" class = "form-check-label">Only Show Available</label>
                 </div>
             </div>
-            <div class = "col-auto">
+            <div class = "col-auto text-end">
                 <button type = "submit" class = "btn btn-primary">Search</button>
             </div>
         </div>
