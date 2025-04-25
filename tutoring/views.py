@@ -33,7 +33,7 @@ def tutoring_table(request):
         "selected_subject": selected_subject,
         "sessions":         qs,
     }
-    return render(request, "tutoring/tutoring_table.html", context)
+    return render(request, "tutoring/tutoringpage.html", context)
     
     
     

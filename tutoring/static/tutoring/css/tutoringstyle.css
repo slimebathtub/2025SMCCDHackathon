@@ -1,0 +1,44 @@
+
+
+
+.results-section table {
+    table-layout: fixed;
+    width: 90%;
+    margin: 0 auto;
+}
+
+.results-section th:nth-child(1),
+.results-section td:nth-child(1) {
+    width: 25%;
+}
+
+.results-section th:nth-child(2),
+.results-section td:nth-child(2) {
+    width: 35%;
+}
+
+.results-section th:nth-child(3),
+.results-section td:nth-child(3) {
+    width: 20%;
+}
+
+.results-section th:nth-child(4),
+.results-section td:nth-child(4) {
+    width: 20%;
+}
+
+.search-section .form-group {
+    flex: 0 0 auto;
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+.search-section .form-select {
+    max-width: 100%;
+}
+
+.results-section td,
+.results-section th {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}

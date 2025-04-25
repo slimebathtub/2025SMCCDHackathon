@@ -10,7 +10,9 @@
   <div class="schedule-header">
     <h1 class="schedule-title">{{ selected_day }} Tutoring Schedule</h1>
     <form method="get" class="day-select-form">
+
       <label for="day-select">Choose a day:</label>
+
       <select id="day-select" name="day" onchange="this.form.submit()">
         {% for value, label in weekdays %}
         <option value="{{ value }}"
@@ -19,7 +21,6 @@
         </option>
       {% endfor %}
       </select>
-      <noscript><button type="submit">View</button></noscript>
     </form>
   </div>
   
@@ -40,7 +41,6 @@
           </option>
         {% endfor %}
       </select>
-      <noscript><button type="submit">View</button></noscript>
     </form>
     
   </div>
