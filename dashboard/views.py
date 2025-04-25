@@ -10,13 +10,24 @@ from tutoring.models import TutoringDailySchedule
 from .forms import ItemForm, RoomForm
 from django.apps import apps
 
+CENTERS = ["MRC", "ISC", "LC"]
 
 def dashboard_view(request):
-    items = Item.objects.all()
-    tutor_schedules = TutoringDailySchedule.objects.all()
+    
+    user = request.user
+    if not user.is_authenticated:
+        # you could redirect to login or treat as “else” below
+        items = Item.objects.none()
+        tutor_schedules = TutoringDailySchedule.objects.none()
+
+    if user.username in CENTERS:
+        items = Item.objects.filter(location__name=user.username)
+        tutor_schedules = TutoringDailySchedule.objects.filter(location=user.username)
+    
     return render(request, 'dashboard/dashboard.html', {
         'items': items,
         'tutor_session': tutor_schedules,
+        'username': user.username
     })
 
 def item_edit_form(request, item_id):

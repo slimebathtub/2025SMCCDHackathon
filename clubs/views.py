@@ -8,6 +8,9 @@ def clubs_table(request):
         ClubInfo.objects.all()
     )
     
+    for s in sessions:
+        s.advisor_pairs = zip(s.advisors, s.advisors_email)
+    
     context = {
         "sessions":  sessions,
     }

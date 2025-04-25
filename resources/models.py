@@ -3,6 +3,7 @@ from core.models import Center
 
 # Create your models here.
 
+
 class ResourceEntity(models.Model):
     STATUS_CHOICES = [
         ('available', 'Still available'),
@@ -39,7 +40,7 @@ class Tag(models.Model):
 
 class Item(ResourceEntity):
     tags = models.ManyToManyField(Tag, blank=True)
-
+    
     def modify_tags(self, new_tags):
         self.tags.set(new_tags)
         self.save()

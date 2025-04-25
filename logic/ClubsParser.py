@@ -42,7 +42,6 @@ def load_clubs(force_refresh=False) -> pd.DataFrame:
 def clubs_parser():
     df = load_clubs()
 
-    # prepare columns to hold Python lists
     df["advisors"]      = df["advisors"].astype(object)
     df["advisors_email"] = df["advisors"].copy().astype(object)
     df["meetings"]      = df["meetings"].astype(object)
@@ -60,13 +59,12 @@ def clubs_parser():
         end  = min(cuts) if cuts else len(raw_name)
         df.at[i, "name"] = raw_name[:end].strip()
 
-        # 2) split advisors into lines, then each line into (name, email)
+       
         advisor_lines = [ln.strip() for ln in row["advisors"].split("\n") if ln.strip()]
-        #advisor_lines = advisor_lines[1:] #drop header
+      
         names, emails = [], []
         days, time, location = [], [], []
         for j in range(1, len(advisor_lines), 2):
-            # split on last space
             nm = advisor_lines[j]
             em = advisor_lines[j+1]
             # ensure the 'edu' suffix
@@ -75,7 +73,7 @@ def clubs_parser():
             names.append(nm)
             emails.append(em)
 
-        df.at[i, "advisors"]      = names
+        df.at[i, "advisors"]       = names
         df.at[i, "advisors_email"] = emails
 
         # 3) split meetings into lines (or leave as list)
@@ -87,8 +85,8 @@ def clubs_parser():
         
     for _, row in df.iterrows():
         base = {
-            "name":           row["name"],
-            "advisors":       row["advisors"],
+            "name":            row["name"],
+            "advisors":        row["advisors"],
             "advisors_email":  row["advisors_email"],
         }
         meets = row["meetings"]
@@ -116,6 +114,7 @@ def clubs_parser():
 def main():
     parsed = clubs_parser()
     print(parsed)
+    
     # and to inspect emails:
     # for lst in parsed["advisor_email"]:
     #     print(lst)

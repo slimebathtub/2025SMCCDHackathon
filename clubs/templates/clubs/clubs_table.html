@@ -1,13 +1,13 @@
 {% extends "clubs/clubs_page.html" %}
 {% load static %}
-{% block title %}Clubs' Schedule{% endblock %}
+{% block title %}CSM Current Clubs{% endblock %}
 
 
 
 {% block content %}
 
   <div class="club-header">
-    <h1 class="club-title"> Cool Schedule</h1>
+    <h1 class="club-title">Current Clubs</h1>
   </div>
   
 
@@ -16,8 +16,10 @@
     <thead>
       <tr>
         <th>Name</th>
-        <th>Meetings</th>
-        <th>Advisors</th>
+        <th>Days</th>
+        <th>Time</th>
+        <th>Location</th>
+        <th>Advisor</th>
       </tr>
     </thead>
     <tbody>
@@ -27,8 +29,14 @@
           <td>{{ s.day}}</td>
           <td>{{ s.time }}</td>
           <td>{{ s.location }}</td>
-          <td>{{ s.advisors|join:", " }}</td>
-        </tr>
+          <td>
+          {% for name,email in s.advisor_pairs %}
+            <a href="mailto:{{ email }}">{{ name }}</a>{% if not forloop.last %}, {% endif %}
+              {% empty %}
+                no advisors
+          {% endfor %}
+          </td>
+          </tr>
       {% empty %}
         <tr>
           <td colspan="4"><em>No thats not true</em></td>

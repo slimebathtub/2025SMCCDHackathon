@@ -23,6 +23,27 @@
     </form>
   </div>
   
+  <div class="schedule-header">
+    <h1 class="schedule-title">Subject Filter</h1>
+    <form method="get" class="subject-select-form">
+      <label for="subj-select">Subject:</label>
+      <select id="subj-select" name="subj" onchange="this.form.submit()">
+        {# Wildcard “Any” at top; empty string means “no filter” #}
+        <option value="" {% if not selected_subject %}selected{% endif %}>
+          Any
+        </option>
+    
+        {% for sub in subjects %}
+          <option value="{{ sub }}" 
+                  {% if sub == selected_subject %}selected{% endif %}>
+            {{ sub }}
+          </option>
+        {% endfor %}
+      </select>
+      <noscript><button type="submit">View</button></noscript>
+    </form>
+    
+  </div>
 
   <div class="table-responsive">
   <table border="1" cellpadding="5" cellspacing="0">
