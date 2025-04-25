@@ -1,4 +1,5 @@
 from django import apps
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.views.decorators.csrf import csrf_exempt
@@ -12,6 +13,7 @@ from django.apps import apps
 
 CENTERS = ["MRC", "ISC", "LC"]
 
+@login_required
 def dashboard_view(request):
     
     user = request.user
@@ -93,7 +95,7 @@ def generic_delete_view(request, model_name, pk):
     
     return HttpResponse(status=405)
 
-
+@login_required
 def dashboard_room_view(request):
     rooms = Room.objects.all()
     tutor_schedules = TutoringDailySchedule.objects.all()

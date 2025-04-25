@@ -44,7 +44,7 @@
                 <select id="search-location" class="form-select" name="location">
                     <option value="">All</option>
                     {% for location in locations %}
-                    <option value="{{ location }}" {% if request.GET.location == location|stringformat:"s" %}selected{% endif %}>{{ location }}</option>
+                    <option value="{{ location }}" {% if request.GET.location == location %}selected{% endif %}>{{ location }}</option>
                     {% endfor %}
                 </select>
                 </div>

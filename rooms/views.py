@@ -17,6 +17,10 @@ def room_list_view(request):
     if capacity and capacity.isdigit():
         rooms = rooms.filter(capacity__gte=int(capacity))
     
+    location = request.GET.get('location')
+    if location:
+        rooms = rooms.filter(location__name=location)
+    
     if request.GET.get('available'):
         rooms = rooms.filter(status='available')
 
