@@ -29,16 +29,15 @@
 <body class="d-flex flex-column min-vh-100">
 
 <!-- Header / Navigation -->
-    <nav class="navbar shadow-sm bg-dark">
+    <nav class="navbar fixed-top shadow-sm bg-dark">
         <div class="container-fluid">
-        <a class="navbar-brand" href="homepage.html">
+        <a class="navbar-brand" href="{% url 'homepage' %}">
             <img src="{% static 'images/csmlogo.png' %}"  alt="CSM Logo" height="50">
         </a>
         <div class="d-flex">
             <a href="{% url 'homepage' %}">Home</a>
             <a href="{% url 'resources-list' %}">Resources</a>
             <a href="{% url 'rooms-list' %}">Meeting Room</a>
-            <a href="#">Event</a>
             <a href="{% url 'tutoring' %}">Tutoring</a>
             <a href="{% url 'clubs_table' %}">Club</a>
             <a class="btn btn-outline-dark" href="{% url 'login' %}">Sign in</a>
