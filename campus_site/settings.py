@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "rooms",
     "tutoring",
     "dashboard",
+    "clubs",
 ]
 
 MIDDLEWARE = [

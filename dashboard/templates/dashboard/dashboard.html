@@ -1,5 +1,6 @@
 {% extends 'core/base.html' %}
 {% load static %}
+{% load schedule_extras %}
 {% block title %}Resources{% endblock %}
 
 {% block extra_css %}
@@ -112,7 +113,7 @@
                             {% for t in tutor_session %}
                             <tr>
                                 <td>{{ t.subject }}</td>
-                                <td>{{ t.courses }}</td>
+                                <td>{{ t.courses|group_courses }}</td>
                                 <td>{{ t.time }}</td>
                             </tr>
                             {% empty %}
