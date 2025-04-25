@@ -15,6 +15,6 @@ def clubs_table(request):
         "sessions":  sessions,
     }
     
-    return render(request, "clubs/clubs_table.html", context)
+    return render(request, "clubs/clubspage.html", context)
 
 # def clubs_table_edit(request):
