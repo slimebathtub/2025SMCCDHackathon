@@ -2,6 +2,7 @@
 <!-- It includes the basic HTML structure, header and footer-->
 <!-- templates/core/base.html -->
 {% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -28,18 +29,18 @@
 <body class="d-flex flex-column min-vh-100">
 
 <!-- Header / Navigation -->
-    <nav class="navbar fixed-top shadow-sm bg-dark">
+    <nav class="navbar shadow-sm bg-dark">
         <div class="container-fluid">
         <a class="navbar-brand" href="homepage.html">
             <img src="{% static 'images/csmlogo.png' %}"  alt="CSM Logo" height="50">
         </a>
         <div class="d-flex">
-            <a href="#">Home</a>
-            <a href="#">Resources</a>
-            <a href="#">Meeting Room</a>
+            <a href="{% url 'homepage' %}">Home</a>
+            <a href="{% url 'resources-list' %}">Resources</a>
+            <a href="{% url 'rooms-list' %}">Meeting Room</a>
             <a href="#">Event</a>
             <a href="tutoring">Tutoring</a>
-            <a class="btn btn-outline-dark" href="{% url 'login' %}">Sign in</a>
+            <a class="btn btn-outline-dark" href="#">Sign in</a>
         </div>
     </div>
     </nav>
@@ -53,16 +54,15 @@
 
 
     <!-- Footer -->
-    <footer class="footer">
+    <footer class = "footer bg-dark text-white py-3">
         <div class="container d-flex flex-column align-items-center">
             <div class="footer-links d-flex justify-content-center gap-4">
                 <a href="#">Resources</a>
                 <a href="#">Room</a>
                 <a href="#">Event</a>
-                <a href="accounts/login">Sign in</a>
             </div>
-        </div>
-    </footer>
+    </div>
+</footer>
 
 <!-- Optional JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
