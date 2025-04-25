@@ -1,0 +1,235 @@
+
+/* first section: intro section */
+
+.intro-section .row {
+    width: 90%;
+    margin: 2rem auto;
+    height: 50vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 40px 40px;
+}
+
+.intro-text {
+    flex: 0 0 50%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    font-size: 16px;
+    align-items: left;
+    line-height: 2;
+    color: #333;
+}
+
+.image-placeholder {
+    flex: 0 0 40%;
+    height: 300px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    margin: 0 auto;
+    border-radius: 8px;
+}
+
+.image-placeholder img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+
+.map-section .container {
+    max-width: 90%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 2rem;
+    padding: 40px 40px;
+}
+
+.map-section img {
+    max-width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 8px;
+    display: block;
+    margin: 0 auto;
+}
+
+
+
+/* secon section: intro section */
+.search-section {
+    max-width: 80%;
+    margin: 1rem auto;
+    background-color: #f8f9fa;
+    border-radius: 16px;
+    padding: 2rem 2rem;
+}
+.search-section .row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 0.5rem;
+}
+.search-section h2 {
+    font-size: 36px;
+    font-weight: bold;
+    color: #000000;
+    margin-bottom: 1rem;
+}
+.search-section .form-label {
+    font-size: 1rem;
+    color: #000000;
+    margin-bottom: 0.5rem;
+}
+.search-section .form-control,
+.search-section .form-select {
+    width: 100%;
+    height: 2.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    border: 1px solid #ced4da;
+    font-size: 1rem;
+    color: #767676;
+}
+
+.search-section .form-check-input {
+    width: 3rem;
+    height: 1.75rem;
+}
+
+.search-section .form-check-input::before {
+    width: 1.5rem;
+    height: 1.5rem;
+    top: calc((1.75rem - 1.5rem) / 2);
+    left: calc((3rem - 1.5rem) / 2);
+}
+/* align switch and its label horizontally with a small gap */
+.search-section .form-switch {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex: 0 0 auto;
+    width: auto !important;
+    margin-top: 0;
+    order: 4;
+}
+
+.search-section .btn-primary{
+    background-color: #3d3d3d !important;
+    border-color: #000000 !important;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    color: #ffffff !important;
+}
+
+/* evenly distribute the three form items */
+.search-section .row > * {
+    flex: 1;
+    max-width: 30%;
+}
+
+/* third section: table */
+.tag-label {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    margin: 0.125rem;
+    border: 1px solid #ccc;
+    border-radius: 0.25rem;
+    font-size: 0.875rem;
+    color: #333;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+.results-section td > .tag-label:first-child {
+    margin-left: 0;
+}
+
+.results-section td {
+    white-space: normal;
+}
+
+
+/* adjust results table width */
+.results-section table {
+    width: 90%;
+    table-layout: auto;
+    margin: 0 auto;
+}
+
+.results-section {
+    margin-bottom: 3rem;
+}
+
+.table-wrapper {
+    max-height: 650px; /* Adjust this value as needed */
+    overflow-y: auto;
+}
+
+.results-section table {
+    table-layout: fixed;
+}
+
+/* adjust the table header */
+/* Blue-white striped table styles */
+
+.center-table {
+    flex: 0 0 40%;
+    border-collapse: collapse;
+    margin-top: 2rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    
+}
+
+.center-table th,
+.center-table td {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border: 1px solid #ccc;
+}
+
+.center-table th {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.center-table tr:nth-child(even) {
+    background-color: #f2f8ff;
+}
+
+.center-table tr:nth-child(odd) {
+    background-color: #ffffff;
+}
+
+
+.results-section th:nth-child(1), .results-section td:nth-child(1) {
+    width: 25%;
+}
+.results-section th:nth-child(2), .results-section td:nth-child(2) {
+    width: 18%;
+}
+.results-section th:nth-child(3), .results-section td:nth-child(3) {
+    width: 17%;
+}
+.results-section th:nth-child(4), .results-section td:nth-child(4) {
+    width: 20%;
+}
+.results-section th:nth-child(5), .results-section td:nth-child(5) {
+    width: 20%;
+}
+
+.table-wrapper {
+    width: 100%;
+    max-width: none;
+}
