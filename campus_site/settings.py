@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     # Custom apps
     "accounts",
     "core",
+    "home",
     "events",
     "resources",
     "rooms",
@@ -74,6 +75,7 @@ TEMPLATES = [
         "DIRS": [
             os.path.join(BASE_DIR, 'resources/templates'),
             BASE_DIR / "templates",
+            
         ],
         "APP_DIRS": True,
         "OPTIONS": {
