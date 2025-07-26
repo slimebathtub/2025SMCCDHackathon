@@ -1,6 +1,7 @@
 import os
 import requests
 from bs4 import BeautifulSoup
+from bs4.element import Tag
 import time
 import pandas as pd
 from .TimeHandler import time_handler as th
@@ -16,6 +17,9 @@ def fetch_active_clubs() -> pd.DataFrame:
 
     soup  = BeautifulSoup(resp.text, "html.parser")
     table = soup.find("table")
+
+    if not isinstance(table, Tag):
+        raise TypeError("The found <table> is not a BeautifulSoup Tag")
 
     records = []
     for row in table.find_all("tr")[1:]:
