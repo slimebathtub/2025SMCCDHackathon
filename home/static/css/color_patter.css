@@ -1,0 +1,19 @@
+:root{
+    /*
+    --Midnight-Blue: #1c2e4a;
+    --Beige: #f5efeb;
+    --Vanilla:#F0E7D5;
+    --Blue-Green: #567C8d;
+    --Navy-Blue: #2F4156;
+    --Sky-Blue: #c8d9e6;
+    */
+    --Midnight-Blue: 28, 46, 74;
+    --Frozen-White: 225, 235, 237;
+    --Beige: 245, 239, 235;
+    --Blue-Green: 86, 124, 141;
+    --Navy-Blue: 47, 65, 86;
+    --Sky-Blue: 200, 217, 230;
+    --Bright-Blue:166,190,209;
+    --Pewter-Blue: 138, 167, 188;
+    --Soft-Blue: 192, 202, 206;
+}
