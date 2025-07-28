@@ -6,79 +6,88 @@
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'css/hero.css' %}">
     <link rel="stylesheet" href="{% static 'css/card.css' %}">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
 {% endblock %}
 
 
 {% block content %}
 <!-- Hero Image Section -->
-<section class="hero-section text-white text-center py-5">
-    <div class="container py-5 bg-overlay">
-        <h1 class="display-4 fw-bold">Resources, at CSM</h1>
-        <p class="lead">
-            Welcome! Here you can find all sorts of important resources offered at College of San Mateo.
-        </p>
+<section class="hero-section">
+    <div class="bg-overlay"></div>
+    <div class="hero-content">
+        <div class="hero-left">
+            <h1 class="display-3">Resources, <br> at CSM</h1>
+            <div class="divider-line"></div>
+            <p class="lead">
+                Welcome! Here you can find all sorts of important resources offered at College of San Mateo.
+            </p>
+            <a href="{% url 'resources-list' %}" class="btn-get-started">Get Started</a>
+        </div>
+        <div class="hero-right"></div>
     </div>
 </section>
 
 <!-- Main Content Section -->
-<div class="container py-5 mb-5">
-    <div class="main-content px-4 px-md-5">
-        <h2 class="fw-bold mt-4">Find It Fast, Use It Well</h2>
-        <p class="text-muted">Which resources you want to find today?</p>
+<section class="main-content">
+    <div class="container py-5 mb-5">
+        <div class="main-content px-4 px-md-5">
+            <h2 class="fw-bold mt-4">Find It Fast, Use It Well</h2>
+            <p class="text-muted">Which resources you want to find today?</p>
 
-        <div class="row mt-4 gx-5 gy-4">
+            <div class="row mt-4 gx-5 gy-4">
 
-            <div class="col-md-4">
-                <a href="{% url 'resources-list' %}" class="card-link text-decoration-none">
-                    <div class="p-4 border rounded text-center custom-card">
-                        <div class="card-image resource-img mb-4"></div>
-                        <h5>Resources</h5>
-                        <p class="text-muted">Check what you can borrow from school</p>
-                    </div>
-                </a>
+                <div class="col-md-4">
+                    <a href="{% url 'resources-list' %}" class="card-link text-decoration-none">
+                        <div class="p-4 border rounded text-center custom-card">
+                            <div class="card-image resource-img mb-4"></div>
+                            <h5>Resources</h5>
+                            <p class="text-muted">Check what you can borrow from school</p>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-md-4">
+                    <a href="{% url 'rooms-list' %}" class="card-link text-decoration-none">
+                        <div class="p-4 border rounded text-center custom-card">
+                            <div class="card-image room-img mb-4"></div>
+                            <h5>Meeting Room</h5>
+                            <p class="text-muted">Check any available room </p>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- <div class="col-md-4">
+                    <a href="#" class="card-link text-decoration-none">
+                        <div class="p-4 border rounded text-center custom-card">
+                            <div class="card-image club-img mb-4"></div>
+                            <h5>Events</h5>
+                            <p class="text-muted">Check what event is holding now</p>
+                        </div>
+                    </a>
+                </div> -->
+                    
+                <div class="col-md-4">
+                    <a href="{% url 'clubs_table' %}" class="card-link text-decoration-none">
+                        <div class="p-4 border rounded text-center custom-card">
+                            <div class="card-image club-img mb-4"></div>
+                            <h5>Club Meeting</h5>
+                            <p class="text-muted">Check what clubs we have today!</p>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-md-4">
+                    <a href="{% url 'tutoring' %}" class="card-link text-decoration-none">
+                        <div class="p-4 border rounded text-center custom-card">
+                            <div class="card-image tutor-img mb-4"></div>
+                            <h5>Tutoring</h5>
+                            <p class="text-muted">Seeking tutor's help</p>
+                        </div>
+                    </a>
+                </div>
+
             </div>
-
-            <div class="col-md-4">
-                <a href="{% url 'rooms-list' %}" class="card-link text-decoration-none">
-                    <div class="p-4 border rounded text-center custom-card">
-                        <div class="card-image room-img mb-4"></div>
-                        <h5>Meeting Room</h5>
-                        <p class="text-muted">Check any available room </p>
-                    </div>
-                </a>
-            </div>
-
-            <!-- <div class="col-md-4">
-                <a href="#" class="card-link text-decoration-none">
-                    <div class="p-4 border rounded text-center custom-card">
-                        <div class="card-image club-img mb-4"></div>
-                        <h5>Events</h5>
-                        <p class="text-muted">Check what event is holding now</p>
-                    </div>
-                </a>
-            </div> -->
-                
-            <div class="col-md-4">
-                <a href="{% url 'clubs_table' %}" class="card-link text-decoration-none">
-                    <div class="p-4 border rounded text-center custom-card">
-                        <div class="card-image club-img mb-4"></div>
-                        <h5>Club Meeting</h5>
-                        <p class="text-muted">Check what clubs we have today!</p>
-                    </div>
-                </a>
-            </div>
-
-            <div class="col-md-4">
-                <a href="{% url 'tutoring' %}" class="card-link text-decoration-none">
-                    <div class="p-4 border rounded text-center custom-card">
-                        <div class="card-image tutor-img mb-4"></div>
-                        <h5>Tutoring</h5>
-                        <p class="text-muted">Seeking tutor's help</p>
-                    </div>
-                </a>
-            </div>
-
         </div>
     </div>
-</div>
+</section>
 {% endblock %}
