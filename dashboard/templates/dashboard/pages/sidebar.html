@@ -1,8 +1,8 @@
 <div class="sidebar">
         <div>
             <h2>Dashboard</h2>
-            <a href="{% url 'dashboard' %}" class="{% if request.path == '/dashboard/pages/dashboard/' %}active{% endif %}">Resources</a>
-            <a href="{% url 'room_page' %}" class="{% if request.path == '/dashboard/pages/room_page/' %}active{% endif %}">Room</a>
+            <a href="{% url 'resources_page' %}" class="{% if request.path == '/dashboard/resources/' %}active{% endif %}">Resources</a>
+            <a href="{% url 'room_page' %}" class="{% if request.path == '/dashboard/room/' %}active{% endif %}">Room</a>
             <a href="#">Event</a>
             <a href="#">Announcement</a>
             <a href="#">Tutoring</a>

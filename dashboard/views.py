@@ -15,7 +15,7 @@ CENTERS = ["MRC", "ISC", "LC"]
 
 @login_required
 def dashboard_view(request):
-    
+    print("DEBUG request.path =", request.path)
     user = request.user
     if not user.is_authenticated:
         # you could redirect to login or treat as “else” below
@@ -26,7 +26,7 @@ def dashboard_view(request):
         items = Item.objects.filter(location__name=user.username)
         tutor_schedules = TutoringDailySchedule.objects.filter(location=user.username)
     
-    return render(request, 'dashboard/pages/dashboard.html', {
+    return render(request, 'dashboard/pages/resources_page.html', {
         'items': items,
         'tutor_session': tutor_schedules,
         'username': user.username
@@ -96,6 +96,7 @@ def generic_delete_view(request, model_name, pk):
 
 @login_required
 def dashboard_room_view(request):
+    print("DEBUG request.path =", request.path)
     rooms = Room.objects.all()
     tutor_schedules = TutoringDailySchedule.objects.all()
     return render(request, 'dashboard/pages/room_page.html', {

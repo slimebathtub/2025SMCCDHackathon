@@ -1,0 +1,29 @@
+
+/* tab styles */
+.tabs a {
+    margin-right: 20px;
+    text-decoration: none;
+    color: #666;
+    font-weight: 500;
+}
+
+.tabs a.active {
+    color: #1f5eff;
+    font-weight: bold;
+    border-bottom: 2px solid #1f5eff;
+}
+
+/* table itself */
+.table {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+.table th, .table td {
+    padding: 15px;
+    vertical-align: middle;
+}
+.table tr.highlight {
+    background: #1f5eff;
+    color: #fff;
+}
