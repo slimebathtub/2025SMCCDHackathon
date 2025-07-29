@@ -1,14 +1,15 @@
+from pyexpat.errors import messages
 from django import apps
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.csrf import csrf_exempt
 
 from resources.models import Item, Tag
 from core.models import Center
 from rooms.models import Room
 from tutoring.models import TutoringDailySchedule
-from .forms import ItemForm, RoomForm
+from .forms import ItemForm, RoomForm, CenterForm
 from django.apps import apps
 
 CENTERS = ["MRC", "ISC", "LC"]
@@ -96,7 +97,6 @@ def generic_delete_view(request, model_name, pk):
 
 @login_required
 def dashboard_room_view(request):
-    print("DEBUG request.path =", request.path)
     rooms = Room.objects.all()
     tutor_schedules = TutoringDailySchedule.objects.all()
     return render(request, 'dashboard/pages/room_page.html', {
@@ -131,3 +131,16 @@ def room_create_form(request):
         form = RoomForm()
         return render(request, 'dashboard/forms/room_edit_form.html', {'form': form})
 
+def dashboard_setting_view(request):
+    center = get_object_or_404(Center, user=request.user)
+    if request.method == 'POST':
+        form = CenterForm(request.POST, instance=center)
+        if form.is_valid():
+            form.save()
+            return redirect('setting_page') 
+        else:
+            messages.error(request, 'Error updating settings.')
+    else:
+        form = CenterForm(instance=center)
+
+    return render(request, 'dashboard/pages/setting_page.html', {'form': form})
