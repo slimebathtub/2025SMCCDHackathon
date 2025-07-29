@@ -43,14 +43,14 @@
                     class="btn btn-sm btn-outline-secondary me-1"
                     data-url="{% url 'item_edit_form' item.id %}"
                     data-bs-toggle="modal"
-                    data-bs-target="#editItemModal"
+                    data-bs-target="#editModal"
                     title="Edit"
                     >
                     <i class="fas fa-pencil-alt"></i>
                 </button>
                 <button class="btn btn-sm btn-outline-danger"
                     data-bs-toggle="modal"
-                    data-bs-target="#deleteConfirmModal"
+                    data-bs-target="#deleteModal"
                     data-url="{% url 'generic_delete' 'item' item.id %}"
                     title="Delete">
                     <i class="fas fa-trash-alt"></i>

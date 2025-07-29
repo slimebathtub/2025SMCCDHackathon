@@ -28,14 +28,14 @@
                         class="btn btn-sm btn-outline-secondary me-1"
                         data-url="{% url 'room_edit_form' room.id %}"
                         data-bs-toggle="modal"
-                        data-bs-target="#editRoomModal"
+                        data-bs-target="#editModal"
                         title="Edit"
                         >
                         <i class="fas fa-pencil-alt"></i>
                     </button>
                     <button class="btn btn-sm btn-outline-danger"
                         data-bs-toggle="modal"
-                        data-bs-target="#deleteConfirmModal"
+                        data-bs-target="#deleteModal"
                         data-url="{% url 'generic_delete' 'room' room.id %}"
                         title="Delete">
                         <i class="fas fa-trash-alt"></i>
