@@ -1,0 +1,52 @@
+{% extends 'dashboard/pages/dashboard_base.html' %}
+{% load static %}
+
+{% block content_table %}
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Status</th>
+            <th>Capacity</th>
+            <th>Edit</th>
+        </tr>
+    </thead>
+        <tbody>
+            {% for room in rooms %}
+            <tr>
+                <td>{{ room.name }}</td>
+                <td>
+                    {% if room.status == 'available' %}
+                        <span>🟢 Available</span>
+                    {% else %}
+                        <span>🔴 Not Available</span>
+                    {% endif %}
+                </td>
+                <td>{{ room.capacity }}</td>
+                <td>
+                    <button
+                        class="btn btn-sm btn-outline-secondary me-1"
+                        data-url="{% url 'room_edit_form' room.id %}"
+                        data-bs-toggle="modal"
+                        data-bs-target="#editRoomModal"
+                        title="Edit"
+                        >
+                        <i class="fas fa-pencil-alt"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger"
+                        data-bs-toggle="modal"
+                        data-bs-target="#deleteConfirmModal"
+                        data-url="{% url 'generic_delete' 'room' room.id %}"
+                        title="Delete">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4"><em>No rooms</em></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+</table>
+{% endblock %}

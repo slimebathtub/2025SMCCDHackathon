@@ -1,3 +1,5 @@
+
+
 {% extends 'core/base.html' %}
 {% load static %}
 {% load schedule_extras %}
@@ -6,6 +8,18 @@
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/dashboardstyle.css' %}">
 {% endblock %}
+<style>
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    z-index: 1000;
+}
+.col-md-9 {
+    margin-left: 240px; /* 假設 sidebar 寬度是 240px */
+}
+</style>
 
 {% block image_url %}
 {% with image_path='images/titleimage.jpg' %}
@@ -21,17 +35,8 @@
 <!--side dash board-->
 <div class="container mt-5">
     <div class="row g-4">
+        {% include "dashboard/sidebar.html" %}
 
-        <div class="col-md ms-md-6">
-            <div class = "sidebar">
-                <p class="sidebar-title">Dash Board</p>
-                <div class="sidebar-content">
-                    <a href="{% url 'dashboard' %}" class="btn btn-light w-100 mb-2 {% if request.path == '/dashboard/' %}active{% endif %}">Sources List</a>
-                    <a href="{% url 'room_manage' %}" class="btn btn-light w-100 mb-2 {% if request.path == '/dashboard/room/' %}active{% endif %}">Room List</a>
-                    <a href="#" class="btn btn-light w-100 mb-2">Event List</a>
-                </div>
-            </div>
-        </div>
 
         <!--main content-->
         <div class="col-md-9">
@@ -222,4 +227,5 @@ document.addEventListener('submit', function (event) {
 </script>
 
 {% endblock %}
+
 

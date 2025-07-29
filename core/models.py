@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 class Center(models.Model):
     name = models.CharField(max_length=100)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    
 
     def __str__(self):
         return self.name

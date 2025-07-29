@@ -1,0 +1,16 @@
+<div class="sidebar">
+        <div>
+            <h2>Dashboard</h2>
+            <a href="{% url 'dashboard' %}" class="{% if request.path == '/dashboard/pages/dashboard/' %}active{% endif %}">Resources</a>
+            <a href="{% url 'room_page' %}" class="{% if request.path == '/dashboard/pages/room_page/' %}active{% endif %}">Room</a>
+            <a href="#">Event</a>
+            <a href="#">Announcement</a>
+            <a href="#">Tutoring</a>
+            <a href="#">Tag management</a>
+            <a href="#">Setting</a>
+        </div>
+        <div class="p-3">
+            <a href="#">Contact us</a>
+            <a href="#">Bug report</a>
+        </div>
+</div>

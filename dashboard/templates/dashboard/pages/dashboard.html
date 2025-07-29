@@ -1,0 +1,67 @@
+{% extends 'dashboard/pages/dashboard_base.html' %}
+{% load static %}
+
+
+{% block tabs %}
+<div class="tabs mb-3">
+    <a href="#" class="active">All orders</a>
+    <a href="#">Not Available Only</a>
+    <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#addItemModal">Add Item</button>
+</div>
+{% endblock %}
+
+{% block content_table %}
+<table class="table orders-table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Status</th>
+            <th>Tags</th>
+            <th>Edit</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in items %}
+        <tr>
+            <td>{{ item.name }}</td>
+            <td>
+                {% if item.status == 'available' %}
+                    <span>🟢 Available</span>
+                {% else %}
+                    <span>🔴 Not Available</span>
+                {% endif %}
+            </td>
+            <td>
+                {% for tag in item.tags.all %}
+                    <span class="badge bg-secondary">{{ tag.name }}</span>
+                {% empty %}
+                    <span class="text-muted">No tags</span>
+                {% endfor %}
+            </td>
+            <td>
+                <button
+                    class="btn btn-sm btn-outline-secondary me-1"
+                    data-url="{% url 'item_edit_form' item.id %}"
+                    data-bs-toggle="modal"
+                    data-bs-target="#editItemModal"
+                    title="Edit"
+                    >
+                    <i class="fas fa-pencil-alt"></i>
+                </button>
+                <button class="btn btn-sm btn-outline-danger"
+                    data-bs-toggle="modal"
+                    data-bs-target="#deleteConfirmModal"
+                    data-url="{% url 'generic_delete' 'item' item.id %}"
+                    title="Delete">
+                    <i class="fas fa-trash-alt"></i>
+                </button>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4"><em>No items</em></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
