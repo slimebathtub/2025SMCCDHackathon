@@ -1,6 +1,5 @@
 import pandas as pd
 import re
-from .TimeHandler import time_handler as th
 from Schedule import LC_URL, WEEK_DAYS, SUBJ_DICT, Schedule, TeachingSlot
 import sqlite3
 
