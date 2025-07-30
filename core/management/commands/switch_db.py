@@ -1,10 +1,13 @@
 # myapp/management/commands/switch_db.py
-from django.core.management.base import BaseCommand, CommandError
-from django.conf import settings
-from django.core.management import call_command
+import sys
 import os
 import shutil
 import tempfile
+import subprocess
+from django.core.management.base import BaseCommand, CommandError
+from django.conf import settings
+from django.core.management import call_command
+from dotenv import dotenv_values
 
 class Command(BaseCommand):
     help = (
@@ -25,7 +28,7 @@ class Command(BaseCommand):
                 "'local': switch to .env.local; "
                 "'prod': switch to .env.production; "
                 "'check': show current DB; "
-                "'copy_from_prod': when on local, dump prod data (excluding contenttypes/auth tables) and load into local"
+                "'copy_from_prod': when on local, dump prod data (excluding system tables) and load into local"
             )
         )
 
@@ -61,35 +64,52 @@ class Command(BaseCommand):
             if current_host:
                 raise CommandError("copy_from_prod can only be run when connected to LOCAL database")
 
-            # Temporarily switch to production env for dump
+            # 1) Switch to production env for dump
             _copy(env_prod, env_file, "Temporarily switched .env to .env.production for dump")
 
-            # Dump production data to a temp file, excluding system tables
+            # 2) Prepare environment variables from .env.production
+            prod_env = dotenv_values(env_prod)
+            proc_env = os.environ.copy()
+            proc_env.update({k: v for k, v in prod_env.items() if v is not None})
+
+            # 3) Dump production data via subprocess
             fd, dump_path = tempfile.mkstemp(prefix='prod_data_', suffix='.json')
             os.close(fd)
             try:
-                call_command(
+                dump_cmd = [
+                    sys.executable,
+                    os.path.join(project_root, 'manage.py'),
                     'dumpdata',
-                    indent=2,
-                    exclude=['contenttypes', 'auth.Permission', 'admin.LogEntry'],
-                    output=dump_path
-                )
-                #self.stdout.write(self.style.SUCCESS(f"✅ Dumped production data to {dump_path}"))
+                    '--exclude', 'contenttypes',
+                    '--exclude', 'auth.Permission',
+                    '--exclude', 'admin.LogEntry',
+                    '--indent', '2',
+                    f'--output={dump_path}'
+                ]
+                self.stdout.write(f"Running: {' '.join(dump_cmd)}")
+                subprocess.run(dump_cmd, check=True, cwd=project_root, env=proc_env)
+                self.stdout.write(self.style.SUCCESS(f"✅ Dumped production data to {dump_path}"))
 
-                # Restore local env
+                # 4) Restore local env
                 _copy(env_local, env_file, "Restored .env from .env.local")
 
-                # Flush and migrate local DB
+                # 5) Flush and migrate local DB
                 call_command('flush', '--no-input')
                 call_command('migrate')
                 self.stdout.write(self.style.SUCCESS("✅ Local DB flushed and migrated"))
 
-                # Load production data into local
-                call_command('loaddata', dump_path)
+                # 6) Load dumped production data into local DB via subprocess
+                load_cmd = [
+                    sys.executable,
+                    os.path.join(project_root, 'manage.py'),
+                    'loaddata',
+                    dump_path
+                ]
+                self.stdout.write(f"Running: {' '.join(load_cmd)}")
+                subprocess.run(load_cmd, check=True, cwd=project_root)
                 self.stdout.write(self.style.SUCCESS("✅ Production data loaded into local DB"))
 
             finally:
-                # Clean up temp dump
                 if os.path.exists(dump_path):
                     os.remove(dump_path)
                     self.stdout.write(self.style.SUCCESS(f"Removed temporary dump file {dump_path}"))
