@@ -12,10 +12,11 @@ from resources.models import Item, Tag
 from core.models import Center
 from rooms.models import Room
 # from tutoring.models import TutoringDailySchedule
-from .forms import ItemForm, RoomForm, CenterForm
+from .forms import ItemForm, RoomForm, CenterForm, TagForm
 from django.apps import apps
 
 CENTERS = ["MRC", "ISC", "LC"]
+
 
 @login_required
 def dashboard_view(request):
@@ -25,15 +26,21 @@ def dashboard_view(request):
         # you could redirect to login or treat as “else” below
         items = Item.objects.none()
         # tutor_schedules = TutoringDailySchedule.objects.none()
-
-    if user.username in CENTERS:
+    elif user.username in CENTERS:
         items = Item.objects.filter(location__user__username=user.username)
         # tutor_schedules = TutoringDailySchedule.objects.filter(location__user_name=user.username)
-
+    else:
+        items = Item.objects.all()
+    
+    #filter:
+    filter_status = request.GET.get('filter', 'all')
+    if filter_status == 'unavailable':
+        items = items.filter(status='unavailable')
     return render(request, 'dashboard/pages/resources_page.html', {
         'items': items,
         # 'tutor_session': tutor_schedules,
-        'username': user.username
+        'username': user.username,
+        'filter_status': filter_status,
     })
 
 def item_edit_form(request, item_id):
@@ -88,10 +95,10 @@ def item_create_form(request):
         return render(request, 'dashboard/forms/item_edit_form.html', {'form': form})
 
 @csrf_exempt
-def generic_delete_view(request, model_name, pk):
+def generic_delete_view(request, model_name, id):
     Model = apps.get_model('rooms' if model_name == 'room' else 'resources', model_name.capitalize())
-    obj = get_object_or_404(Model, id=pk)
-    
+    obj = get_object_or_404(Model, id=id)
+
     if request.method == 'POST':
         obj.delete()
         return HttpResponse(status=204)
@@ -102,17 +109,27 @@ def generic_delete_view(request, model_name, pk):
 def dashboard_room_view(request):
     rooms = Room.objects.filter(location__user__username=request.user.username)
     # tutor_schedules = TutoringDailySchedule.objects.all()
+    
+    #filter:
+    filter_status = request.GET.get('filter', 'all')
+    if filter_status == 'unavailable':
+        rooms = rooms.filter(status='unavailable')
     return render(request, 'dashboard/pages/room_page.html', {
         'rooms': rooms,
+        'filter_status': filter_status,
     })
 
 @csrf_exempt
 def room_edit_form(request, room_id):
     room = get_object_or_404(Room, id=room_id)
+    
+    center = Center.objects.get(user=request.user)
+    room.location = center
+
     if request.method == 'POST':
         form = RoomForm(request.POST, instance=room)
         if form.is_valid():
-            form.save()
+            room.save()
             return HttpResponse(status=204)
         else:
             return render(request, 'dashboard/forms/room_edit_form.html', {'form': form})
@@ -126,7 +143,10 @@ def room_create_form(request):
     if request.method == 'POST':
         form = RoomForm(request.POST)
         if form.is_valid():
-            form.save()
+            room = form.save(commit=False)
+            center = Center.objects.get(user=request.user)
+            room.location = center
+            room.save()
             return HttpResponse(status=204)
         else:
             return render(request, 'dashboard/forms/room_edit_form.html', {'form': form})
@@ -184,3 +204,30 @@ def bulk_delete_tags(request):
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)})
     return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=405)
+
+
+def tag_edit_view(request, tag_id):
+    tag = get_object_or_404(Tag, id=tag_id)
+    if request.method == 'POST':
+        form = TagForm(request.POST, instance=tag)
+        if form.is_valid():
+            updated_tag = form.save(commit=False)
+            updated_tag.location = Center.objects.get(user=request.user)  # 確保 location 不被竄改
+            updated_tag.save()
+            return HttpResponse(status=204)
+    else:
+        form = TagForm(instance=tag)
+    return render(request, 'dashboard/forms/tag_edit_form.html', {'form': form})
+
+
+def tag_create_view(request):
+    if request.method == 'POST':
+        form = TagForm(request.POST)
+        if form.is_valid():
+            tag = form.save(commit=False)
+            tag.location = Center.objects.get(user=request.user)
+            tag.save()
+            return HttpResponse(status=204)
+    else:
+        form = TagForm()
+    return render(request, 'dashboard/forms/tag_edit_form.html', {'form': form})

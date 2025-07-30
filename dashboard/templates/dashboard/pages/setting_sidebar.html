@@ -1,17 +1,23 @@
 <div class="setting-side-bar col-md-4">
-    <div class="card mb-3">
-        <div class="card-body">
-            <h5 class="card-title">Account Setting</h5>
+    <a href="{% url 'setting_page' %}" class="{% if request.path == '/dashboard/setting/' %}active{% endif %}">
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Account Setting</h5>
+            </div>
         </div>
-    </div>
-    <div class="card mb-3">
-        <div class="card-body">
-            <h5 class="card-title">Advance Information</h5>
+    </a>
+    <a href="#" class="text-decoration-none"></a>
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Advance Information</h5>
+            </div>
         </div>
-    </div>
-    <div class="card mb-3">
-        <div class="card-body">
-            <h5 class="card-title">Tag management</h5>
+    </a>
+    <a href="{% url 'tag_management_page' %}" class="{% if request.path == '/dashboard/setting/' %}active{% endif %}">
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Tag management</h5>
+            </div>
         </div>
-    </div>
+    </a>
 </div>

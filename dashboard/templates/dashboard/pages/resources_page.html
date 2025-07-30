@@ -4,8 +4,8 @@
 
 {% block tabs %}
 <div class="tabs mb-3">
-    <a href="#" class="active">All orders</a>
-    <a href="#">Not Available Only</a>
+    <a href="?filter=all" class="{% if filter_status == 'all' %}active{% endif %}">All orders</a>
+    <a href="?filter=unavailable" class="{% if filter_status == 'unavailable' %}active{% endif %}">Not Available Only</a>
     <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#addItemModal">Add Item</button>
 </div>
 {% endblock %}

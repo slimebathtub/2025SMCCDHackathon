@@ -34,6 +34,7 @@ class ResourceEntity(models.Model):
     
 class Tag(models.Model):
     name = models.CharField(max_length=100)
+    location = models.ForeignKey(Center, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return self.name

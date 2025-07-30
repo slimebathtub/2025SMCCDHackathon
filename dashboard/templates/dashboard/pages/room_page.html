@@ -1,6 +1,19 @@
 {% extends 'dashboard/pages/dashboard_base.html' %}
 {% load static %}
 
+{% block tabs %}
+<div class="tabs mb-3">
+    <a href="?filter=all" class="{% if filter_status == 'all' %}active{% endif %}">All orders</a>
+    <a href="?filter=unavailable" class="{% if filter_status == 'unavailable' %}active{% endif %}">Not Available Only</a>
+    <button class="btn btn-secondary"
+        data-bs-toggle="modal"
+        data-bs-target="#editModal"
+        data-url="{% url 'room_create_form' %}">
+        Add Room
+    </button>
+</div>
+{% endblock %}
+
 {% block content %}
 <table class="table room-table">
     <thead>
@@ -33,13 +46,10 @@
                         >
                         <i class="fas fa-pencil-alt"></i>
                     </button>
-                    <button class="btn btn-sm btn-outline-danger"
-                        data-bs-toggle="modal"
+                    <button data-bs-toggle="modal"
                         data-bs-target="#deleteModal"
                         data-url="{% url 'generic_delete' 'room' room.id %}"
-                        title="Delete">
-                        <i class="fas fa-trash-alt"></i>
-                    </button>
+                        > Delete</button>
                 </td>
             </tr>
             {% empty %}

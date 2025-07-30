@@ -17,13 +17,24 @@
             <div id="tag-list" class="d-flex flex-wrap gap-2 mb-3">
                 <!-- Example tags, replace with dynamic loop -->
                 {% for tag in tags %}
-                    <span class="tag-pill" data-id="{{ tag.id }}" data-tag="{{ tag.name }}">{{ tag.name }}</span>
+                    <span class="tag-pill"
+                        data-id="{{ tag.id }}"
+                        data-tag="{{ tag.name }}"
+                        data-edit-url="{% url 'tag_edit_page' tag.id %}">
+                        {{ tag.name }}
+                    </span>
                 {% endfor %}
             </div>
 
             <!-- Action buttons -->
             <div class="d-flex gap-2">
-                <button id="add-tag-btn" class="btn btn-primary">Add Tag</button>
+                <button id="add-tag-btn"
+                        class="btn btn-primary"
+                        data-bs-toggle="modal"
+                        data-bs-target="#editModal"
+                        data-url="{% url 'tag_create_page' %}">
+                    Add Tag
+                </button>
                 <button id="bulk-delete-trigger" class="btn btn-danger">Delete</button>
             </div>
         </div>
@@ -39,7 +50,34 @@
             });
         });
     });
+
+// add tag  modal
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.tag-pill').forEach(tag => {
+        tag.addEventListener('click', () => tag.classList.toggle('selected'));
+        tag.addEventListener('dblclick', () => {
+            // let edit_modal.js handle modal opening
+            tag.dispatchEvent(new CustomEvent('editmodal:trigger', { detail: { url: tag.dataset.editUrl } }));
+        });
+    });
+});
+
+// fdouble click to edit tag
+document.querySelectorAll('.tag-pill').forEach(tag => {
+    tag.addEventListener('dblclick', () => {
+        const editUrl = tag.dataset.editUrl;
+        const modal = new bootstrap.Modal(document.getElementById('editModal'));
+        fetch(editUrl, { headers: { 'X-Requested-With': 'XMLHttpRequest' }})
+            .then(res => res.text())
+            .then(html => {
+                document.getElementById('editModalBody').innerHTML = html;
+                modal.show();
+            });
+    });
+});
 </script>
+
+
 {% endblock %}
 
 {% block delete_form %}
