@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', function () {
         editModal.addEventListener('show.bs.modal', function (event) {
             const button = event.relatedTarget;
             const url = button.getAttribute('data-url');
+            console.log("Loading modal from URL:", url);
             const modalBody = document.getElementById('editModalBody');
             modalBody.innerHTML = '<p>Loading...</p>';
             fetch(url)

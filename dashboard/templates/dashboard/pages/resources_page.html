@@ -6,7 +6,12 @@
 <div class="tabs mb-3">
     <a href="?filter=all" class="{% if filter_status == 'all' %}active{% endif %}">All orders</a>
     <a href="?filter=unavailable" class="{% if filter_status == 'unavailable' %}active{% endif %}">Not Available Only</a>
-    <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#addItemModal">Add Item</button>
+    <button class="btn btn-secondary"
+        data-bs-toggle="modal"
+        data-bs-target="#editModal"
+        data-url="{% url 'item_create_form' %}">
+        Add Item
+    </button>
 </div>
 {% endblock %}
 
@@ -44,7 +49,6 @@
                     data-url="{% url 'item_edit_form' item.id %}"
                     data-bs-toggle="modal"
                     data-bs-target="#editModal"
-                    data-bs-toggle="tooltip"
                     title="Edit"
                 >
                     <i class="fas fa-pencil-alt"></i>
@@ -53,10 +57,8 @@
                     data-bs-toggle="modal"
                     data-bs-target="#deleteModal"
                     data-url="{% url 'generic_delete' 'item' item.id %}"
-                    data-bs-toggle="tooltip"
                     title="Delete"
                 >
-                <!-- tooltip: a small pop-up box that appears when you hover over an element -->
                     <i class="fas fa-trash-alt"></i>
                 </button>
             </td>
@@ -68,17 +70,6 @@
         {% endfor %}
     </tbody>
 </table>
-
-{% block extra_js %}
-<script>
-// Initialize Bootstrap tooltips
-document.addEventListener('DOMContentLoaded', () => {
-    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-    tooltipTriggerList.map(el => new bootstrap.Tooltip(el));
-});
-</script>
-
-{% endblock %}
 
 {% endblock %}
 
