@@ -1,0 +1,17 @@
+<div class="sidebar">
+        <div>
+            <h3>Dashboard</h3>
+            <div class = "link-container">
+                <a href="{% url 'resources_page' %}" class="{% if request.path == '/dashboard/resources/' %}active{% endif %}">
+                    <i class="fas fa-pencil-alt"></i> Resources</a>
+                <a href="{% url 'room_page' %}" class="{% if request.path == '/dashboard/room/' %}active{% endif %}">Room</a>
+                <a href="#">Announcement</a>
+                <a href="#">Tutoring</a>
+                <a href="{% url 'setting_page' %}" class="{% if '/dashboard/setting' in request.path %}active{% endif %}">Setting</a>
+            </div>
+        </div>
+        <div class="p-3">
+            <a href="#">Contact us</a>
+            <a href="#">Bug report</a>
+        </div>
+</div>
