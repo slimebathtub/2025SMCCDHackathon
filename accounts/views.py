@@ -31,3 +31,13 @@ def login_page(request):
             return redirect('/dashboard/')
 
     return render(request, 'login.html')
+
+def logout_view(request):
+    if request.method == 'POST':
+        logout(request)
+        messages.success(request, "You have been logged out successfully.")
+        return redirect('login')
+    return render(request, 'logout.html')
+    # return HttpResponse("You have been logged out successfully.")
+    # return redirect('login')
+    # return render(request, 'logout.html') 

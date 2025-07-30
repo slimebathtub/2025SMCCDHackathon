@@ -44,15 +44,19 @@
                     data-url="{% url 'item_edit_form' item.id %}"
                     data-bs-toggle="modal"
                     data-bs-target="#editModal"
+                    data-bs-toggle="tooltip"
                     title="Edit"
-                    >
+                >
                     <i class="fas fa-pencil-alt"></i>
                 </button>
                 <button class="btn btn-sm btn-outline-danger"
                     data-bs-toggle="modal"
                     data-bs-target="#deleteModal"
                     data-url="{% url 'generic_delete' 'item' item.id %}"
-                    title="Delete">
+                    data-bs-toggle="tooltip"
+                    title="Delete"
+                >
+                <!-- tooltip: a small pop-up box that appears when you hover over an element -->
                     <i class="fas fa-trash-alt"></i>
                 </button>
             </td>
@@ -64,4 +68,17 @@
         {% endfor %}
     </tbody>
 </table>
+
+{% block extra_js %}
+<script>
+// Initialize Bootstrap tooltips
+document.addEventListener('DOMContentLoaded', () => {
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    tooltipTriggerList.map(el => new bootstrap.Tooltip(el));
+});
+</script>
+
 {% endblock %}
+
+{% endblock %}
+

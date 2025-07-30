@@ -174,11 +174,12 @@ MEDIA_URL = '/media/'
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# just for testing
-LOGIN_REDIRECT_URL = '/items/'
-
+# login and logout redirect URLs
+LOGIN_REDIRECT_URL = '/dashboard/'
+LOGOUT_REDIRECT_URL = '/'
 
 # Explicitly trust deployed domain for CSRF protection
 CSRF_TRUSTED_ORIGINS = [
     "https://resources-at-csm.onrender.com"
 ]
+

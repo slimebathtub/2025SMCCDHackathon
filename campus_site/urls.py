@@ -26,6 +26,6 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
     path('rooms/', include('rooms.urls')),
     path('dashboard/', include('dashboard.urls')),
-    path('', include('accounts.urls')),
+    path('accounts/', include('accounts.urls')),
     path('clubs/', include('clubs.urls')),
 ]
