@@ -1,6 +1,6 @@
 import json
 from django.contrib import messages
-from xxlimited import new
+#from xxlimited import new
 from django import apps
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, JsonResponse
