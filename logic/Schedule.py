@@ -2,7 +2,7 @@ import pandas as pd
 
 WEEK_DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
 COLUMNS = ["subject", "courses", "time", "location", "tutors"]
-from .TimeHandler import time_handler as th
+from TimeHandler import time_handler as th
 
 SUBJ_DICT = {
     "Biology"          : "BIOL",
