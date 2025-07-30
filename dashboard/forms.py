@@ -32,10 +32,7 @@ class RoomForm(forms.ModelForm):
 class CenterForm(forms.ModelForm):
     class Meta:
         model = Center
-        fields = ['user_name', 'user_password', 'center_full_name', 'center_short_name', 'center_building_address']
-        widgets = {
-            'user_password': forms.PasswordInput(attrs={'class': 'form-control'}),
-        }
+        fields = ['center_full_name', 'center_short_name', 'center_building_address']
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for visible in self.visible_fields():

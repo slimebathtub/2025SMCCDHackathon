@@ -1,14 +1,17 @@
-from pyexpat.errors import messages
+import json
+from django.contrib import messages
+from xxlimited import new
 from django import apps
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.hashers import check_password
 
 from resources.models import Item, Tag
 from core.models import Center
 from rooms.models import Room
-from tutoring.models import TutoringDailySchedule
+# from tutoring.models import TutoringDailySchedule
 from .forms import ItemForm, RoomForm, CenterForm
 from django.apps import apps
 
@@ -21,15 +24,15 @@ def dashboard_view(request):
     if not user.is_authenticated:
         # you could redirect to login or treat as “else” below
         items = Item.objects.none()
-        tutor_schedules = TutoringDailySchedule.objects.none()
+        # tutor_schedules = TutoringDailySchedule.objects.none()
 
     if user.username in CENTERS:
-        items = Item.objects.filter(location__name=user.username)
-        tutor_schedules = TutoringDailySchedule.objects.filter(location=user.username)
-    
+        items = Item.objects.filter(location__user__username=user.username)
+        # tutor_schedules = TutoringDailySchedule.objects.filter(location__user_name=user.username)
+
     return render(request, 'dashboard/pages/resources_page.html', {
         'items': items,
-        'tutor_session': tutor_schedules,
+        # 'tutor_session': tutor_schedules,
         'username': user.username
     })
 
@@ -97,8 +100,8 @@ def generic_delete_view(request, model_name, pk):
 
 @login_required
 def dashboard_room_view(request):
-    rooms = Room.objects.all()
-    tutor_schedules = TutoringDailySchedule.objects.all()
+    rooms = Room.objects.filter(location__user__username=request.user.username)
+    # tutor_schedules = TutoringDailySchedule.objects.all()
     return render(request, 'dashboard/pages/room_page.html', {
         'rooms': rooms,
     })
@@ -131,16 +134,53 @@ def room_create_form(request):
         form = RoomForm()
         return render(request, 'dashboard/forms/room_edit_form.html', {'form': form})
 
+
 def dashboard_setting_view(request):
     center = get_object_or_404(Center, user=request.user)
     if request.method == 'POST':
-        form = CenterForm(request.POST, instance=center)
-        if form.is_valid():
-            form.save()
-            return redirect('setting_page') 
-        else:
-            messages.error(request, 'Error updating settings.')
-    else:
-        form = CenterForm(instance=center)
+        center.center_full_name = request.POST.get("center_fullname", center.center_full_name)
+        center.center_short_name = request.POST.get("shortcut", center.center_short_name)
+        center.center_building_address = request.POST.get("address", center.center_building_address)
+        center.save()
+        messages.success(request, 'Settings updated successfully.')
+    
+        user = center.user
+        new_username = request.POST.get("user_fullname")
+        new_password = request.POST.get("password")
 
-    return render(request, 'dashboard/pages/setting_page.html', {'form': form})
+        # Update password if provided
+        if new_password:
+            if check_password(new_password, user.password):
+                messages.error(request, 'Password cannot be the same as the old one.')
+            else:
+                user.set_password(new_password)
+
+        if new_username:
+            user.username = new_username
+        
+        user.save()
+        
+        return redirect('setting_page')
+
+    form = CenterForm(instance=center)
+    return render(request, 'dashboard/pages/setting_page.html', {
+        'form': form,
+        'center': center,
+    })
+
+def Tag_management_setting(request):
+    return render(request, 'dashboard/pages/tag_manage_page.html',{
+        'tags': Tag.objects.all(),
+    })
+
+@csrf_exempt 
+def bulk_delete_tags(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            tag_ids = data.get('ids', [])
+            Tag.objects.filter(id__in=tag_ids).delete()
+            return JsonResponse({'status': 'success', 'deleted': tag_ids})
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)})
+    return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=405)

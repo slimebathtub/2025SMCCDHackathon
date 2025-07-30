@@ -1,0 +1,71 @@
+<!-- Bulk Delete Modal -->
+
+<div class="modal fade" id="bulkDeleteModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content p-3">
+            <div class="modal-header">
+                <h5 class="modal-title">Delete Selected Tags</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                Are you sure you want to delete the selected tags?
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button id="confirmBulkDelete" type="button" class="btn btn-danger">Confirm Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Listen for bulk-delete-trigger to open the modal if tags are selected
+document.addEventListener('click', function(e) {
+    // click Delete button -> open bulk delete modal
+    if (e.target && e.target.id === 'bulk-delete-trigger') {
+        const selected = Array.from(document.querySelectorAll('.tag-pill.selected')).map(tag => tag.dataset.id);
+        if (selected.length === 0) {
+            alert("Please select at least one tag before deleting");
+            return;
+        }
+        const modal = new bootstrap.Modal(document.getElementById('bulkDeleteModal'));
+        modal.show();
+    }
+});
+
+// Listen for confirmBulkDelete to send the delete request
+document.addEventListener('click', function(e) {
+    // click Confirm Delete button -> send request to delete selected tags
+    if (e.target && e.target.id === 'confirmBulkDelete') {
+        const selected = Array.from(document.querySelectorAll('.tag-pill.selected')).map(tag => tag.dataset.id);
+        
+        if (selected.length === 0) {
+            alert("No tags selected, please select tags before deleting");
+            return;
+        }
+
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+        fetch("{% url 'bulk_delete_tags' %}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": csrfToken
+            },
+            body: JSON.stringify({ ids: selected })
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log("Server response:", data);
+            if (data.status === 'success') {
+                location.reload();
+            } else {
+                alert("Delete failed: " + (data.message || "Unknown error"));
+            }
+        })
+        .catch(err => console.error("❌ Fetch error:", err));
+    }
+});
+</script>

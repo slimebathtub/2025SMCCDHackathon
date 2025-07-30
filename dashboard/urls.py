@@ -14,4 +14,6 @@ urlpatterns = [
     path('room/create/', views.room_create_form, name='room_create_form'),
 
     path('setting/', views.dashboard_setting_view, name='setting_page'),
+    path('setting/tag_management/', views.Tag_management_setting, name='tag_management_page'),
+    path('tags/bulk_delete/', views.bulk_delete_tags, name='bulk_delete_tags')
 ]

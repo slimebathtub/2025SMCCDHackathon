@@ -1,0 +1,53 @@
+{% extends 'dashboard/pages/dashboard_base.html' %}
+{% load static %}
+
+<meta name="csrf-token" content="{{ csrf_token }}">
+
+
+{% block content %}
+<div class = "row">
+    <!-- left side bar -->
+    {% include 'dashboard/pages/setting_sidebar.html' %}
+    <!-- right side content -->
+        <div class="upper-bar col-md-8">
+        <div class="tag-manager-container p-3 border rounded">
+            <h2 class="mb-3">Tag Management</h2>
+
+            <!-- Tag list -->
+            <div id="tag-list" class="d-flex flex-wrap gap-2 mb-3">
+                <!-- Example tags, replace with dynamic loop -->
+                {% for tag in tags %}
+                    <span class="tag-pill" data-id="{{ tag.id }}" data-tag="{{ tag.name }}">{{ tag.name }}</span>
+                {% endfor %}
+            </div>
+
+            <!-- Action buttons -->
+            <div class="d-flex gap-2">
+                <button id="add-tag-btn" class="btn btn-primary">Add Tag</button>
+                <button id="bulk-delete-trigger" class="btn btn-danger">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const tags = document.querySelectorAll('.tag-pill');
+        tags.forEach(tag => {
+            tag.addEventListener('click', () => {
+                tag.classList.toggle('selected');
+            });
+        });
+    });
+</script>
+{% endblock %}
+
+{% block delete_form %}
+    {% include "dashboard/forms/bulk_delete_form.html" %}
+{% endblock %}
+
+
+.tag-pill.selected {
+    background: #007bff;
+    color: white;
+}
