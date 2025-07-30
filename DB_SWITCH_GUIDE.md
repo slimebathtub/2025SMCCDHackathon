@@ -105,10 +105,18 @@ python manage.py runserver
 
 ---
 
-## ✅ 6. Notes
-- First time on cloud: run `python manage.py migrate`
-- You may need to create an admin account: `python manage.py createsuperuser`
-- Never share your Supabase password publicly.
+## ✅ 6. commend
+1. the easiest way check which database you are using now:
+> echo $DJANGO_ENV 
+- If you see local migrations, you will not see anything
+- If you see "production", it means it successfully connected to online database
+
+2. complicated way to check 
+    2.1 open your shell
+        > python manage.py shell
+    2.2 enter this commend:
+        > from django.conf import settings
+        > print(settings.DATABASES['default'])
 
 ---
 

@@ -42,37 +42,24 @@
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const tags = document.querySelectorAll('.tag-pill');
-        tags.forEach(tag => {
-            tag.addEventListener('click', () => {
-                tag.classList.toggle('selected');
-            });
-        });
-    });
-
-// add tag  modal
 document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.tag-pill').forEach(tag => {
-        tag.addEventListener('click', () => tag.classList.toggle('selected'));
-        tag.addEventListener('dblclick', () => {
-            // let edit_modal.js handle modal opening
-            tag.dispatchEvent(new CustomEvent('editmodal:trigger', { detail: { url: tag.dataset.editUrl } }));
+        //  single click → toggle selection
+        tag.addEventListener('click', () => {
+            tag.classList.toggle('selected');
         });
-    });
-});
 
-// fdouble click to edit tag
-document.querySelectorAll('.tag-pill').forEach(tag => {
-    tag.addEventListener('dblclick', () => {
-        const editUrl = tag.dataset.editUrl;
-        const modal = new bootstrap.Modal(document.getElementById('editModal'));
-        fetch(editUrl, { headers: { 'X-Requested-With': 'XMLHttpRequest' }})
-            .then(res => res.text())
-            .then(html => {
-                document.getElementById('editModalBody').innerHTML = html;
-                modal.show();
-            });
+        //  double click → open edit modal
+        tag.addEventListener('dblclick', () => {
+            const editUrl = tag.dataset.editUrl;
+            const modal = new bootstrap.Modal(document.getElementById('editModal'));
+            fetch(editUrl, { headers: { 'X-Requested-With': 'XMLHttpRequest' }})
+                .then(res => res.text())
+                .then(html => {
+                    document.getElementById('editModalBody').innerHTML = html;
+                    modal.show();
+                });
+        });
     });
 });
 </script>
@@ -84,8 +71,9 @@ document.querySelectorAll('.tag-pill').forEach(tag => {
     {% include "dashboard/forms/bulk_delete_form.html" %}
 {% endblock %}
 
-
+<style>
 .tag-pill.selected {
     background: #007bff;
     color: white;
 }
+</style>
