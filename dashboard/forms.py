@@ -12,12 +12,20 @@ class ItemForm(forms.ModelForm):
     )
     class Meta:
         model = Item
-        fields = ['name', 'status', 'tags', 'location']
+        fields = ['name', 'status', 'tags']
+        widgets = {
+            'tags': forms.CheckboxSelectMultiple(),
+        }
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        if 'location' in self.fields:
+            self.fields['location'].disabled = True
+
         for visible in self.visible_fields():
-            visible.field.widget.attrs['class'] = 'form-control'
+        # only for not Checkbox use form-control
+            if not isinstance(visible.field.widget, forms.CheckboxSelectMultiple):
+                visible.field.widget.attrs['class'] = 'form-control'
 
 class RoomForm(forms.ModelForm):
     class Meta:

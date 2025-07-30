@@ -1,3 +1,10 @@
+<style>
+.tag-checkbox-list label {
+    display: inline-block;
+    width: 30%;
+    margin-bottom: 5px;
+}
+</style>
 
 <form class="ajax-edit-form" method="post" action="{% if form.instance.id %}{% url 'item_edit_form' form.instance.id %}{% else %}{% url 'item_create_form' %}{% endif %}">
     {% csrf_token %}

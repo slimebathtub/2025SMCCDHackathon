@@ -45,6 +45,10 @@ def dashboard_view(request):
 
 def item_edit_form(request, item_id):
     item = get_object_or_404(Item, id=item_id)
+
+    center = Center.objects.get(user=request.user)
+    item.location = center
+
     if request.method == 'POST':
         form = ItemForm(request.POST, instance=item)
         if form.is_valid():
@@ -75,8 +79,11 @@ def item_create_form(request):
     if request.method == 'POST':
         form = ItemForm(request.POST)
         if form.is_valid():
-            item = form.save()
-            # If user create a new teg
+            item = form.save(commit=False)
+            center = Center.objects.get(user=request.user)
+            item.location = center
+            item.save()
+            # If user create a new tag
             new_tag_str = form.cleaned_data.get('new_tags', "")
             if new_tag_str:
                 tag_names = []
