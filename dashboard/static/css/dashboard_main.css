@@ -1,8 +1,9 @@
 :root{
     --sidebar-width: 260px;
     --sidebar-bg-color: #1c2e4a;
-    --sidebar-text-color: #fff;
-    --sidebar-hover-bg-color: #fff;
-
+    --sidebar-text-color: #f5efeb;
+    --sidebar-hover-bg-color: #f5efeb;
     
+    --light-color: #f5efeb;
+    --hover-text-color: #2F4156;
 }

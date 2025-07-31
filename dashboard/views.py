@@ -14,6 +14,8 @@ from rooms.models import Room
 # from tutoring.models import TutoringDailySchedule
 from .forms import ItemForm, RoomForm, CenterForm, TagForm
 from django.apps import apps
+from django.core.paginator import Paginator
+from django.shortcuts import render
 
 CENTERS = ["MRC", "ISC", "LC"]
 

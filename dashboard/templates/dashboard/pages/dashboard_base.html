@@ -5,10 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token }}">
-    
 
-    <!-- Font Awesome for icons -->
-    <link rel="stylesheet" href="{% static 'icons/fontawesome-free-7.0.0-web/css/all.min.css' %}">
+    <!-- Load Bootstrap Icons -->
+    <link rel="stylesheet" href="{% static 'icons/bootstrap-icons/bootstrap-icons.css' %}">
 
     <title>Dashboard</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
@@ -28,7 +27,8 @@
         {% block topbar %}
             <div class="topbar">
             <div>
-                <h2>Welcome User</h2>
+                <h2>Welcome in, {{ user.username }}!</h2>
+                <p>view and manage your resources here.</p>
             </div>
             <div>
                 <form action="{% url 'logout' %}" method="post">
@@ -38,8 +38,10 @@
             </div>
         </div>
         {% endblock %}
-        {% block tabs %}{% endblock %}
-        {% block content %} {% endblock %}
+        <div class = "content-container">
+            {% block tabs %}{% endblock %}
+            {% block content %} {% endblock %}
+        </div>
     </div>
 
     {% block delete_form %}
