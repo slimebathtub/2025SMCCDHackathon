@@ -49,4 +49,4 @@ def group_courses(courses):
             out.append(prefix)
         else:
             out.append(f"{prefix} " + ", ".join(s for s in suffixes if s))
-    return "; ".join(out)
+    return ", ".join(out)

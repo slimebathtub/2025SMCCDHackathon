@@ -1,7 +1,10 @@
 import pandas as pd
 import re
-from Schedule import LC_URL, WEEK_DAYS, SUBJ_DICT, Schedule, TeachingSlot
 import sqlite3
+try:
+    from .Schedule import LC_URL, WEEK_DAYS, Schedule, TeachingSlot
+except ImportError:
+    from Schedule import LC_URL, WEEK_DAYS, Schedule, TeachingSlot
 
 SOURCE_DF = pd.read_csv(LC_URL, dtype=str)
 LOCATION = "Learning Center"
@@ -10,16 +13,17 @@ LOCATION = "Learning Center"
 # df.iloc[Monday , 9:00]  returns the courses
 lc = Schedule(LOCATION)
     
-def LC_extract_info():
+def parse_lc():
     global SOURCE_DF  
     df = SOURCE_DF.iloc[2:19, 0:6].reset_index(drop=True)
     df.columns = ["Subject"] + WEEK_DAYS
-
-    for _, row in df.iterrows():
-        for day in WEEK_DAYS:
+    ts = TeachingSlot(location=LOCATION)
+    
+    for day in WEEK_DAYS:
+        ts.day = day
+        for _, row in df.iterrows():
+               
             # "Accounting\n\n100,121,131"
-            ts = TeachingSlot(location=LOCATION, day=day)
-             
             try:
                 subj_name, courses_str = str(row.get("Subject")).split("\n\n", 1)
                 subj_name, courses_str = map(str.strip, [subj_name, courses_str])
@@ -44,7 +48,7 @@ def LC_extract_info():
                     continue              
                 
                 tutor, time_str = lines[0].split(":", 1)
-                ts.tutor = tutor.strip()
+                ts.tutors = tutor.strip()
                 
                 times = [c.strip() for c in re.split(r",|/", time_str) if c.strip()]
                 for time in times:
@@ -53,28 +57,13 @@ def LC_extract_info():
                     
             lc.finalize_day(day)
     lc.fix_time()
-    
-
-def save_sqlite(day, df):
-    
-    if "courses" in df.columns:
-        df = df.copy()
-        df["courses"] = df["courses"].apply(
-            lambda x: ", ".join(x) if isinstance(x, list) else str(x)
-        )
-    
-    conn = sqlite3.connect("lc_database.db")
-    df.to_sql(day, conn, if_exists='replace', index=False)
-    conn.commit()
-    conn.close()
+    return lc
 
 def main():
-    LC_extract_info()
-    for day in WEEK_DAYS:
-        #print(day)
-        #print(lc.week_dfs.get(day))
-        save_sqlite(day, lc.week_dfs.get(day))
-   
+    global lc
+    parse_lc()
+    lc.to_sql()
+    
    
 if __name__ == "__main__":
     main()   

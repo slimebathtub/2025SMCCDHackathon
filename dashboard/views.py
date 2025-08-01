@@ -11,7 +11,7 @@ from django.contrib.auth.hashers import check_password
 from resources.models import Item, Tag
 from core.models import Center
 from rooms.models import Room
-# from tutoring.models import TutoringDailySchedule
+from tutoring.models import TutoringDailySchedule
 from .forms import ItemForm, RoomForm, CenterForm, TagForm
 from django.apps import apps
 
@@ -25,12 +25,13 @@ def dashboard_view(request):
     if not user.is_authenticated:
         # you could redirect to login or treat as “else” below
         items = Item.objects.none()
-        # tutor_schedules = TutoringDailySchedule.objects.none()
+        tutor_schedules = TutoringDailySchedule.objects.none()
     elif user.username in CENTERS:
         items = Item.objects.filter(location__user__username=user.username)
-        # tutor_schedules = TutoringDailySchedule.objects.filter(location__user_name=user.username)
+        tutor_schedules = TutoringDailySchedule.objects.filter(location=user.username)
     else:
         items = Item.objects.all()
+        tutor_schedules = TutoringDailySchedule.objects.all()
     
     #filter:
     filter_status = request.GET.get('filter', 'all')
@@ -38,7 +39,7 @@ def dashboard_view(request):
         items = items.filter(status='unavailable')
     return render(request, 'dashboard/pages/resources_page.html', {
         'items': items,
-        # 'tutor_session': tutor_schedules,
+        'tutor_session': tutor_schedules,
         'username': user.username,
         'filter_status': filter_status,
     })
@@ -114,8 +115,13 @@ def generic_delete_view(request, model_name, id):
 
 @login_required
 def dashboard_room_view(request):
-    rooms = Room.objects.filter(location__user__username=request.user.username)
-    # tutor_schedules = TutoringDailySchedule.objects.all()
+    user = request.user
+    if not user.is_authenticated:
+        rooms = Room.objects.none()
+    elif user.username in CENTERS:
+        rooms = Room.objects.filter(location__user__username=request.user.username)    
+    else:
+        rooms = Room.objects.all()
     
     #filter:
     filter_status = request.GET.get('filter', 'all')

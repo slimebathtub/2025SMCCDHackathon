@@ -27,7 +27,7 @@
         {% block topbar %}
             <div class="topbar">
             <div>
-                <h2>Welcome User</h2>
+                <h2>Welcome {{user.username}}</h2>
             </div>
             <div>
                 <form action="{% url 'logout' %}" method="post">

@@ -1,8 +1,16 @@
 import pandas as pd
-
+import os
+import sqlite3
+from tutoring.models import TutoringDailySchedule
+try:
+    from .TimeHandler import merge_time_ranges as mtr
+except ImportError:
+    from TimeHandler import merge_time_ranges as mtr
+    
+    
 WEEK_DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
 COLUMNS = ["subject", "courses", "time", "location", "tutors"]
-from TimeHandler import time_handler as th
+WEEK_DICT = dict(zip(["MON", "TUES", "WED", "THURS", "FRI"], WEEK_DAYS))
 
 SUBJ_DICT = {
     "Biology"          : "BIOL",
@@ -42,7 +50,7 @@ class TeachingSlot:
         day      : str = "NAN",
         subject  : str = "NAN",
         courses  : str = "NAN",
-        tutor    : str = "NAN",
+        tutors    : str = "NAN",
         time     : str = "NAN"
     ):
         self.location = location
@@ -50,7 +58,13 @@ class TeachingSlot:
         self.courses  = courses
         self.time     = time
         self.day      = day
-        self.tutor    = tutor  
+        self.tutors    = tutors  
+        
+    def is_ok(self):
+        invalids = {"nan", "NAN", "", None}
+        return all(getattr(self, attr) not in invalids for attr in vars(self))
+
+        
 
 class Schedule:
     _day_buffers = {day: [] for day in WEEK_DAYS}
@@ -64,22 +78,72 @@ class Schedule:
             print(f"Day '{ts.day}' is not recognized. Slot not added.")
             return
 
+        if not ts.is_ok():
+            return
+
         new_entry = {
             "subject"  : ts.subject,
             "courses"  : ts.courses,
             "time"     : ts.time,
             "location" : ts.location,
-            "tutors"   : ts.tutor
+            "tutors"   : ts.tutors
         }
 
         self._day_buffers[ts.day].append(new_entry)
         
     def finalize_day(self, day):
         self.week_dfs[day] = pd.DataFrame(self._day_buffers[day], columns=COLUMNS)
+    
+    def finalize_week(self):
+        for day in WEEK_DAYS:
+            self.finalize_day(day)
         
     def fix_time(self):
         for day in WEEK_DAYS:
-            self.week_dfs[day] = th(self.week_dfs[day])
+            self.week_dfs[day] = mtr(self.week_dfs[day])
             #WEEK_DAYS[day] = WEEK_DAYS[day].reset_index(drop=True)
-
         
+    def to_sql(self):
+        path = os.path.join("tutoring", "databases", self.location + ".db")
+        conn = sqlite3.connect(path)
+        cur = conn.cursor()
+        for day in WEEK_DAYS:
+            df = self.week_dfs.get(day)
+            # Pre-process your DataFrame as before…
+            if df is None or df.empty:
+                return
+            
+            df["courses"] = df["courses"].apply(
+                    lambda x: ", ".join(x) if isinstance(x, list) else str(x)
+                ) 
+           
+            # <-- drop the table first if it exists
+            cur.execute(f'DROP TABLE IF EXISTS "{day}"')
+            conn.commit()
+
+            # now append (or replace) will never fail on CREATE
+            df.to_sql(day, conn, if_exists='append', index=False)
+
+        conn.close()
+        
+    def to_instances(self) -> list[TutoringDailySchedule]:
+        """
+        Turn every row in every weekday-DataFrame into a
+        TutoringDailySchedule (unsaved) instance.
+        """
+        instances = []
+        for day, df in self.week_dfs.items():
+            if df is None or df.empty:
+                continue
+            for _, row in df.iterrows():
+                # row['courses'] is already a Python list (or string)
+                inst = TutoringDailySchedule(
+                    weekday = day,
+                    subject = row['subject'],
+                    courses = row['courses'],      # JSONField can take list
+                    time = row['time'],
+                    tutors = row['tutors'],
+                    location = row['location']
+                )
+                instances.append(inst)
+        return instances

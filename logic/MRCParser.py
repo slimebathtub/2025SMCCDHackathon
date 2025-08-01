@@ -1,7 +1,11 @@
 import pandas as pd
-from .TimeHandler import time_handler as th
-from .TimeHandler import merge_time_ranges as mtr
 #import sqlite3
+
+try:
+    from .Schedule import MRC_URL, WEEK_DAYS, Schedule, TeachingSlot
+except ImportError:
+    from Schedule import MRC_URL, WEEK_DAYS, Schedule, TeachingSlot
+
 
 ''' This script is meant to parse the MRC (Math Resource Center) tutoring schedule
     into a .db file that will be then displayed in the website
@@ -11,16 +15,9 @@ from .TimeHandler import merge_time_ranges as mtr
     well. After that I just find the table limits by the "CLOSED" and "HOURS" keywords.
 '''
 
-MRC_URL = (
-    "https://docs.google.com/spreadsheets/d/e/"
-    "2PACX-1vRK33wM-yaF-svgS2vuzaSO_YP-Uh_NeZRP5MVRMIlp9tcOQIvcJRQLbpjhOyd0U73ou_IaW-l9G2Hm"
-    "/pub?gid=105984831&single=true&output=csv"
-)
-WEEK_DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
-#pandas indexing: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html
-# most crucial : #df.iloc[y1:y2, x1:x2] # y1:y2 = rows, x1:x2 = columns
-
+# df.iloc[y1:y2, x1:x2] # y1:y2 = rows, x1:x2 = columns
 SOURCE_DF = pd.read_csv(MRC_URL)
+LOCATION = "Math Resource Center"
 
 def linear_search(key="CLOSED", start_index=0, axis="col"):
     global SOURCE_DF
@@ -42,18 +39,14 @@ def linear_search(key="CLOSED", start_index=0, axis="col"):
 # for example, Friday might finish earlier than other weekdays, so we need to check for that
 
 def clean(names):
-    courses = []
-    for name in names:
-        name_str = str(name).strip()
-        course = ""
-        if "Stats" in name_str:
-            course = "Stats"
-        elif name_str and name_str not in ["nan", "CLOSED"]:
-            course = "General Math"
-        courses.append(course)
+    stats_found = any("(Stats)" in str(name) for name in names)
+    course = "Any" if stats_found else "General"
+    tutors = ", ".join(
+        str(name).replace("(Stats)", "") for name in names 
+        if name and "nan" not in str(name)
+    )
         
-    courses = [course for course in courses if course]  # no empty strings
-    return list(set(courses))                            # remove duplicates
+    return tutors, course
             
 def format_df():
     global SOURCE_DF
@@ -63,8 +56,7 @@ def format_df():
     x2 = linear_search("CLOSED", start_index=y1+1, axis="row")
    
     # 2. Build and clean up header
-    df = SOURCE_DF.iloc[y1:y2, 0:x2]    
-    df = df.reset_index(drop=True) 
+    df = SOURCE_DF.iloc[y1:y2, 0:x2].reset_index(drop=True)
     df.columns = df.iloc[0].str.split().str[0]
     df = df.iloc[1:].reset_index(drop=True)
 
@@ -85,54 +77,35 @@ def format_df():
             triplet = clean([row1[j], row2[j], row3[j]])
             combined_row.append(triplet)
         combined_rows.append(combined_row)
-    df = pd.DataFrame(combined_rows, columns=df.columns)
-    #print(df)
     
-    return df
+    return pd.DataFrame(combined_rows, columns=df.columns)
    
 #weekday, subject, class_name, time, location
-        
-def MRC_create_weekday_dfs(df = format_df()):
+mrc = Schedule(LOCATION)   
+
+def parse_mrc():
+    global SOURCE_DF
+    df = format_df()
+    ts = TeachingSlot(location=LOCATION, subject="Math", courses="General")
     
-    # make 5 dfs (one for each weekday) with columns  
-    # subject, courses, time, location
-    
-    time_col = df.columns[0]
-    day_cols = list(df.columns[1:6])  
-    
-    week_dfs = dict()
-    day_index = 0
-    for day_col in day_cols:
-        # assemble a new DataFrame
-        mask = (
-            df[day_col].apply(lambda x: "CLOSED" not in x and len(x) > 0)  # != "CLOSED"
-            & df[day_col].notna()                                        # drop NaN
-        )
-        clean_df = df.loc[mask]
-        day_df = pd.DataFrame({
-            "subject" :  ["Math"] * len(clean_df),
-            "courses" :  clean_df[day_col],
-            "time"    :  clean_df[time_col].astype(str),
-            "location":  ["MRC"] * len(clean_df),
-        })
-        
-        day = WEEK_DAYS[day_index]
-        day_index += 1
-        day_df = th(day_df)           # format time
-        day_df = mtr(day_df)          # merge time ranges
-        day_df.reset_index(drop=True)  # reset index
-        week_dfs[day] = day_df
-        
-    return week_dfs
-    
+    for day in WEEK_DAYS:
+        ts.day = day
+        for _, row in df.iterrows():
+            if day not in row or "HOURS" not in row:
+                continue
+            
+            ts.time = row["HOURS"] 
+            ts.tutors, ts.courses = row[day]
+            
+            mrc.add_slot(ts)
+        mrc.finalize_day(day)
+    mrc.fix_time()
+    return mrc
     
 def main():
-    weekdays = MRC_create_weekday_dfs()
+    global mrc
+    parse_mrc()
+    mrc.to_sql()
     
-    for day in weekdays:
-        print(day)
-        print(weekdays[day])
-    
-   
 if __name__ == "__main__":
     main()

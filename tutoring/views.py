@@ -33,20 +33,10 @@ def tutoring_table(request):
         "selected_subject": selected_subject,
         "sessions":         qs,
     }
-    return render(request, "tutoring/tutoringpage.html", context)
-    
-    
-    
-
-    # 3) pass both the list of choices and the selected value
-    context = {
-        "weekdays":         TutoringDailySchedule.WEEKDAYS,   # list of (value,label)
-        "selected_day":     selected_day,
-        "selected_subject": selected_subject,
-        "sessions":         sessions,
-        "subjects":          subjects
-    }
     return render(request, "tutoring/tutoring_table.html", context)
+    
+    
+    
 
 # superuser 
 # name: edgar

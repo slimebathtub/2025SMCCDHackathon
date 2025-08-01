@@ -3,9 +3,15 @@ import pandas as pd
 from datetime import datetime
 
 def merge_time_ranges(df: pd.DataFrame):
+    
     df = time_handler(df)
     merged_rows = []
+    current_row = ''
+    
+    if df.empty:
+        return
     current_row = df.iloc[0].copy()
+    
     
     for i in range(1, len(df)):
         next_row = df.iloc[i]
@@ -16,6 +22,7 @@ def merge_time_ranges(df: pd.DataFrame):
             current_row["subject"] == next_row["subject"]
             and current_row["courses"] == next_row["courses"]
             and current_row["location"] == next_row["location"]
+            and current_row["tutors"] == next_row["tutors"]
             and curr_end_t == next_start_t
         ):
             # Merge the time ranges
@@ -80,7 +87,8 @@ def main():
         "subject": ["Math", "Physics"],
         "courses": [["MATH 251", "MATH 253"], ["PHYS 100"]],
         "time": ["9am - 10:00 am", "11:00 am -11:30pm"],
-        "location": ["MRC", "Learning Center"]
+        "location": ["MRC", "Learning Center"],
+        "tutors" : ["Hey", "You!"]
     })
     df = time_handler(df)
     print(df["time"])

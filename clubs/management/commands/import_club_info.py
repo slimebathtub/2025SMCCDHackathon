@@ -2,14 +2,11 @@
 from django.core.management.base import BaseCommand
 from clubs.models import ClubInfo
 from logic.ClubsParser import clubs_parser
-from logic.TimeHandler import time_handler as th
-import pandas as pd
+
 
 objs = []
-WEEK_DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
-
 class Command(BaseCommand):
-    help = "Import the MRC schedule into TutoringDailySchedule, one row per session."
+    help = "Import the clubs schedule into TutoringDailySchedule, one row per session."
 
     def handle(self, *args, **options):
         # clear out old data

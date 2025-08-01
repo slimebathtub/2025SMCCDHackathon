@@ -1,44 +1,45 @@
-
-
-
+/* compact overrides for the main table */
 .results-section table {
-    table-layout: fixed;
-    width: 90%;
-    margin: 0 auto;
+  table-layout: auto;
+  width: 90%;
+  margin: 0 auto;
+  font-size: 0.85rem;
 }
 
+.results-section th,
+.results-section td {
+  padding: 0.35rem 0.6rem;
+  vertical-align: middle;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* proportional widths (sum <100%) */
 .results-section th:nth-child(1),
-.results-section td:nth-child(1) {
-    width: 25%;
-}
-
+.results-section td:nth-child(1) { width: 15%; } /* Subject */
 .results-section th:nth-child(2),
-.results-section td:nth-child(2) {
-    width: 35%;
-}
-
+.results-section td:nth-child(2) { width: 10%; } /* Class */
 .results-section th:nth-child(3),
-.results-section td:nth-child(3) {
-    width: 20%;
-}
-
+.results-section td:nth-child(3) { width: 20%; } /* Time */
 .results-section th:nth-child(4),
-.results-section td:nth-child(4) {
-    width: 20%;
+.results-section td:nth-child(4) { width: 25%; } /* Tutors */
+.results-section th:nth-child(5),
+.results-section td:nth-child(5) { width: 20%; } /* Location */
+
+/* Allow wrapping only for Tutors and Location if content is long */
+.results-section td:nth-child(4),
+.results-section td:nth-child(5) {
+  white-space: normal;
+  word-break: break-word;
 }
 
-.search-section .form-group {
-    flex: 0 0 auto;
-    max-width: 100%;
-    margin: 0 auto;
+/* stripes & hover */
+.results-section tbody tr:nth-child(even) {
+  background: #f9fbfd;
+}
+.results-section tbody tr:hover {
+  background: #eef5fc;
 }
 
-.search-section .form-select {
-    max-width: 100%;
-}
-
-.results-section td,
-.results-section th {
-    padding-top: 2rem;
-    padding-bottom: 2rem;
-}

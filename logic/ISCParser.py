@@ -1,35 +1,16 @@
 import pandas as pd
 import re
-from .TimeHandler import time_handler as th
-# ISC URL
-ISC_URL = (
-    "https://docs.google.com/spreadsheets/d/e/"
-    "2PACX-1vTXGQcyHvjXs4o_4sFErW432K2jNC_kiSc6HN2ynw4kUufv1dYSLMsRORsG1GyMhpY_H89YohQegFYq"
-    "/pub?gid=0&single=true&output=csv"
-)
 
-WEEK_DICT = {
-    "MON"   : "Monday",
-    "TUES"  : "Tuesday",
-    "WED"   : "Wednesday",
-    "THURS" : "Thursday",
-    "FRI"   : "Friday",
-}
+try:
+    from .Schedule import ISC_URL, WEEK_DAYS, WEEK_DICT, SUBJ_DICT, Schedule, TeachingSlot
+except ImportError:
+    from Schedule import ISC_URL, WEEK_DAYS, WEEK_DICT, SUBJ_DICT, Schedule, TeachingSlot
 
-SUBJ_DICT = {
-    "Biology"  : "BIOL",
-    "Chemistry": "CHEM",
-    "Computer Science" : "CIS",
-    "Engineering" : "ENGR",
-    "Math" : "MATH",
-    "Physics" : "PHYS",
-}
 
-WEEK_DAYS = [v for v in WEEK_DICT.values()]
 SOURCE_DF = pd.read_csv(ISC_URL)
+LOCATION = "Integrated Science Center"
 
-
-def clean(subject, courses, location):
+def clean(subject, courses):
     cleaned_courses = []
     subject = str(subject).strip()
     
@@ -40,17 +21,17 @@ def clean(subject, courses, location):
         if "up to" in courses.lower():
             if match:
                 upper_bound = match.group()
-                courses = f'(up to {upper_bound})'
+                courses = f'up to {upper_bound}'
             else:
                 courses = f'(Any)'
                 
         
         courses_list = courses.split(",")
-        subj = SUBJ_DICT[subject]
+        subj = SUBJ_DICT.get(subject)
         
-        cleaned_courses = [f'{subj} {course.strip()}' for course in courses_list if course.strip()]
+        cleaned_courses = [f'{course.strip()}' for course in courses_list if course.strip()]
         
-        return subject, cleaned_courses, location
+        return subject, ", ".join(cleaned_courses)
     
     except AttributeError as e:
         print(f"Error processing courses: {e}")
@@ -59,83 +40,53 @@ def clean(subject, courses, location):
         raise e
         
     
-    
-
-
-
 # df.iloc[y1:y2, x1:x2] # y1:y2 = row range, x1:x2 = column range
-# Build one DataFrame per day,
-# columns are : subject, courses, time, location
-def ISC_create_weekday_dfs():
+isc = Schedule(location=LOCATION)
+
+def parse_isc():
     global SOURCE_DF
+    ts = TeachingSlot(location=LOCATION)
+    #subject, courses, time, day, tutors
     
-    df = SOURCE_DF.iloc[1:-2].reset_index(drop=True)   
-    week_records = {day: [] for day in WEEK_DAYS}
-    week_dfs = {day: pd.DataFrame(
-        columns=["subject", "courses", "time", "location"])
-        for day in WEEK_DAYS
-    } 
-    
-    subj = ""
-    
+    df = SOURCE_DF.iloc[0:-2].reset_index(drop=True)   
+    df.columns = ["day", "time", "tutor", "classes"]
     for i, row in df.iterrows():
-        if row.iloc[0] in SUBJ_DICT:
-            subj = row.iloc[0]
+        if row["day"] in SUBJ_DICT:
+            ts.subject = row.iloc[0] # same as row[day] but i want to emphasize is not a day
             continue #skip next row bc are just headers
         
-        if row.iloc[0] not in WEEK_DICT.keys():
+        day_key = str(row["day"]).split(',')[0].strip()
+        
+        if day_key not in WEEK_DICT:
             continue
         
-        day = WEEK_DICT[row.iloc[0]]
-        records = week_records[day]
+        ts.day = WEEK_DICT[day_key]
+        
         try:
-            time = row.iloc[1]
-            tutor = row.iloc[2]
-            courses = row.iloc[3]
+            ts.time, ts.courses = clean(row.iloc[1], row.iloc[3]) 
+            ts.tutors = row.iloc[2]
+        except TypeError as e:
+            print(f"Error processing row {i}: {e}")
+            print("Subject and courses:", ts.subject, ts.courses)
+            raise e
         except:
             print(f"Damn, something wrong on row {i}: {row}")
             continue
         
-        
-        try:
-            subj, courses, location = clean(subj, courses, "ISC")
-        except TypeError as e:
-            print(f"Error processing row {i}: {e}")
-            print("LHS:",subj, courses, "ISC")
-            print("RHS:",clean(subj, courses, "ISC"))
-            raise e
-        
-        records.append({
-            "subject": subj,
-            "courses": courses,
-            "time": time,
-            "location": location,
-        })
-            
-    for day in WEEK_DAYS:
-        week_dfs[day] = th(pd.DataFrame.from_records(
-            week_records[day], columns=["subject", "courses", "time", "location"]
-        ))
-    
-    return week_dfs
+        isc.add_slot(ts)
+    isc.finalize_week()
+    isc.fix_time()
+    return isc
     
 
 def main():
-    week_dfs = ISC_create_weekday_dfs()
-    for day, df in week_dfs.items():
-        print(f"DataFrame for {day}:")
-        print(df)  
-        print("\n")
-
-# Load ISC data and save it as an Excel file
-def download_isc_schedule():
-    isc_df = pd.read_csv(ISC_URL)  # Load the ISC data from the URL
-    isc_df.to_excel("ISC_Schedule.xlsx", index=False)  # Save it as an Excel file
-    print("ISC schedule downloaded as 'ISC_Schedule.xlsx'.")
+    global isc
+    parse_isc()
+    isc.to_sql()
+    
 
 
-# Example usage
 if __name__ == "__main__":
     main()
-    #download_isc_schedule()
+  
     
