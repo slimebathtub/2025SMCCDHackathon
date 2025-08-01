@@ -1,28 +1,73 @@
 .sidebar {
-    width: 240px;
-    background: #1f5eff;
-    color: #fff;
+    width: var(--sidebar-width);
+    background: var(--sidebar-bg-color);
+    color: var(--sidebar-text-color);
+
     position: fixed;
     top: 0;
     bottom: 0;
-    padding-top: 30px;
+    
     display: flex;
     flex-direction: column;
     justify-content: space-between;
 }
-.sidebar h2 { 
+.sidebar h3 {
     text-align: center;
-    margin-bottom: 30px; 
+    margin-top: 40px;
+    margin-bottom: 70px;
 }
-.sidebar a { 
-    color: #fff;
+
+.sidebar .link-container {
+    padding-left: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    font-size: large;
+}
+.sidebar .link-container a { 
+    font-size: large;
+    height: 55px;
+    color: var(--sidebar-text-color);
     text-decoration: none;
     padding: 12px 30px;
     display: flex;
     align-items: center;
 }
-.sidebar a:hover, .sidebar a.active {
-    background: #fff;
-    color: #1f5eff;
-    border-radius: 25px 0 0 25px;
+
+
+.sidebar .external-link{
+    border-top: 1px solid var(--sidebar-text-color);
+    height: 15%;
+}
+
+.sidebar .external-link ul {
+    list-style: inside;
+    list-style-position: outside;
+    padding: 12px 30px;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.sidebar .external-link li a{
+    color: var(--sidebar-text-color);
+    text-decoration: none;
+}
+.sidebar .external-link li a:hover{
+    background: var(--sidebar-hover-bg-color);
+    color: var(--hover-text-color);
+    text-decoration: none;
+}
+
+
+
+.sidebar i{
+    font-size: 1.5rem;
+    padding-right: 15px;
+}
+.sidebar .link-container a:hover, .sidebar .link-container a.active{
+    background: var(--sidebar-hover-bg-color);
+    color: var(--hover-text-color);
+    border-radius: 15px 0 0 15px;
 }

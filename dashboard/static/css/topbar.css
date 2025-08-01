@@ -1,0 +1,38 @@
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 20px;
+    margin-bottom: 15px;
+    border: 3px solid white;
+    border-radius: 12px;
+    background-color: rgba(255,255,255,0.7);
+}
+
+.topbar p,
+.topbar h2 {
+    margin: 10px;
+}
+.topbar .btn{
+    height: 50px;
+    width: auto;
+
+    display: inline-flex;
+    align-items: center;
+
+    /*background-color: var(--sidebar-bg-color);*/
+    background-color: #2a5298;
+    border-color: white;
+}
+
+.topbar .btn:hover,
+.topbar .btn:active{
+    background-color: white;
+    color: var(--sidebar-bg-color);
+    border-color: var(--sidebar-bg-color);
+}
+
+.topbar i{
+    font-size: 1.5rem;
+    padding-right: 15px;
+}
