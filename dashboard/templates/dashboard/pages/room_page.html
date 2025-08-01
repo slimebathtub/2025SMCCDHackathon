@@ -63,4 +63,7 @@
             {% endfor %}
         </tbody>
 </table>
+
+{% include 'dashboard/elements/pagination.html' with page_obj=rooms %}
+
 {% endblock %}

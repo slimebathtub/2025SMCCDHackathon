@@ -15,6 +15,8 @@
     <link rel="stylesheet" href="{% static 'css/dashboardstyle.css' %}">
     <link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
     <link rel="stylesheet" href="{% static 'css/table.css' %}">
+    <link rel="stylesheet" href="{% static 'css/pagination.css' %}">
+    <link rel="stylesheet" href="{% static 'css/topbar.css'%}">
     {% block extra_css %}{% endblock %}
 </head>
 
@@ -25,18 +27,7 @@
 
     <div class="content">
         {% block topbar %}
-            <div class="topbar">
-            <div>
-                <h2>Welcome in, {{ user.username }}!</h2>
-                <p>view and manage your resources here.</p>
-            </div>
-            <div>
-                <form action="{% url 'logout' %}" method="post">
-                    {% csrf_token %}
-                    <button class="btn btn-primary">Log out</button>
-                </form>
-            </div>
-        </div>
+            {% include 'dashboard/elements/topbar.html' %}
         {% endblock %}
         <div class = "content-container">
             {% block tabs %}{% endblock %}

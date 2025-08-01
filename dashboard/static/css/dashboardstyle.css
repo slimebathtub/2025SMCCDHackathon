@@ -7,36 +7,161 @@ body {
     margin-left: var(--sidebar-width);
     padding: 30px;
 }
-.topbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px 20px;
-    margin-bottom: 15px;
-    border: 3px solid white;
-    border-radius: 12px;
-    background-color: rgba(255,255,255,0.7);
-}
+
 .content-container{
     border: 3px solid white;
     border-radius: 12px;
     padding: 30px;
     background-color: rgba(255,255,255,0.7);
 }
-.topbar p,
-.topbar h2 {
-    margin: 10px;
+
+.tag-custom-container .add-tag-btn{
+    height: 45px;
+    width: auto;
+
+    display: inline-flex;
+    align-items: center;
+
+    /*background-color: var(--sidebar-bg-color);*/
+    background-color: #2a5298;
+    border-color: white;
 }
 
-.status {
-    font-weight: bold;
+.tag-custom-container .add-tag-btn:hover,
+.tag-custom-container .add-tag-btn:active{
+    background-color: white;
+    color: var(--sidebar-bg-color);
+    border-color: var(--sidebar-bg-color);
 }
-.status.pending {
-    color: #ff4b5c;
+
+.tabs a.active{
+    text-decoration: none;
+    color: #2a5298 !important;
 }
-.status.dispatch {
-    color: #00d97e;
+.tabs a:hover{
+    color: lightgray;
 }
-.status.completed {
-    color: #999;
+
+.tabs .btn{
+    height: auto;
+    width: auto;
+
+    display: inline-flex;
+    align-items: center;
+
+    /*background-color: var(--sidebar-bg-color);*/
+    background-color: #2a5298;
+    border-color: white;
+}
+.tabs .btn:hover,
+.tabs .btn:active{
+    background-color: white;
+    color: var(--sidebar-bg-color);
+    border-color: var(--sidebar-bg-color);
+}
+
+.tabs i{
+    font-size: 1.5rem;
+    padding-right: 15px;
+}
+
+
+.setting-side-bar .card{
+    border-radius: 12px;
+    box-shadow: 2px 2px 2px rgba(0,0,0,0.2);
+}
+
+.setting-side-bar a{
+    text-decoration: none !important;
+}
+
+.setting-side-bar .card.active,
+.setting-side-bar .card a.active {
+    border: 1px solid #2a5298 !important; /* highlight border color */
+    box-shadow: 0 0 5px rgba(42,82,152,0.5) !important;
+    
+}
+
+.setting-side-bar .card:hover {
+    border: 2px solid lightgray; /* subtle border on hover */
+}
+
+.setting-content .card{
+    border: 0;
+    border-radius: 12px;
+    box-shadow: 2px 2px 7px rgba(0,0,0,0.2);
+}
+
+.setting-content .save-btn{
+    height: auto;
+    width: auto;
+
+    display: inline-flex;
+    align-items: center;
+
+    /*background-color: var(--sidebar-bg-color);*/
+    background-color: #2a5298;
+    border-color: white;
+}
+
+.setting-content .save-btn:hover,
+.setting-content .save-btn:active{
+    background-color: white;
+    color: var(--sidebar-bg-color);
+    border-color: var(--sidebar-bg-color);
+}
+
+
+.tag-list-bar {
+    padding: 0px 20px;
+}
+
+.tag-custom-container{
+    width: auto;
+    padding: 30px;
+    border: 0;
+    border-radius: 12px;
+    box-shadow: 2px 2px 7px rgba(0,0,0,0.2);
+}
+
+.tag-pill{
+    background-color: white;
+    border: #2a5298 solid 1px;
+    border-radius: 5px;
+    padding: 5px 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.tag-pill:hover{
+    background-color: #b1cdfd;
+    color: #2a5298;
+    border-color: white;
+}
+
+.tag-pill.selected{
+    background-color: #2a5298;
+    color: white;
+}
+
+.btn-delete:hover:enabled {
+    background-color: red;
+    color: white;
+}
+
+.btn-delete{
+    border: 1px solid red;
+    background-color: white;
+    color: rgb(0, 0, 0);
+}
+
+.btn-delete:disabled {
+    background-color: #ccc;
+    border-color: #ccc;
+    color: #666;
+    cursor: not-allowed;
 }

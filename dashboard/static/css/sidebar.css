@@ -16,6 +16,7 @@
     margin-top: 40px;
     margin-bottom: 70px;
 }
+
 .sidebar .link-container {
     padding-left: 15px;
     display: flex;
@@ -32,6 +33,8 @@
     display: flex;
     align-items: center;
 }
+
+
 .sidebar .external-link{
     border-top: 1px solid var(--sidebar-text-color);
     height: 15%;

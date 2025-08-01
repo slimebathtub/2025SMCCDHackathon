@@ -1,0 +1,13 @@
+<div class="topbar">
+    <div>
+        <h2>Welcome in, {{ user.username }}!</h2>
+        <p>view and manage your resources here.</p>
+    </div>
+    <div>
+        <form action="{% url 'logout' %}" method="post">
+            {% csrf_token %}
+            <button class="btn btn-primary">
+                <i class="bi bi-box-arrow-right"></i>Log out</button>
+        </form>
+    </div>
+</div>
