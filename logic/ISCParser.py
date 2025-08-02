@@ -2,12 +2,12 @@ import pandas as pd
 import re
 
 try:
-    from .Schedule import ISC_URL, WEEK_DAYS, WEEK_DICT, SUBJ_DICT, Schedule, TeachingSlot
+    from .Schedule import URL_DICT, WEEK_DICT, SUBJ_DICT, Schedule, TeachingSlot
 except ImportError:
-    from Schedule import ISC_URL, WEEK_DAYS, WEEK_DICT, SUBJ_DICT, Schedule, TeachingSlot
+    from Schedule import URL_DICT, WEEK_DICT, SUBJ_DICT, Schedule, TeachingSlot
 
 
-SOURCE_DF = pd.read_csv(ISC_URL)
+SOURCE_DF = pd.read_csv(URL_DICT.get("ISC"))
 LOCATION = "Integrated Science Center"
 
 def clean(subject, courses):

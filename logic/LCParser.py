@@ -1,12 +1,12 @@
 import pandas as pd
 import re
-import sqlite3
-try:
-    from .Schedule import LC_URL, WEEK_DAYS, Schedule, TeachingSlot
-except ImportError:
-    from Schedule import LC_URL, WEEK_DAYS, Schedule, TeachingSlot
 
-SOURCE_DF = pd.read_csv(LC_URL, dtype=str)
+try:
+    from .Schedule import URL_DICT, WEEK_DAYS, Schedule, TeachingSlot
+except ImportError:
+    from Schedule import URL_DICT, WEEK_DAYS, Schedule, TeachingSlot
+
+SOURCE_DF = pd.read_csv(URL_DICT.get("LC"), dtype=str)
 LOCATION = "Learning Center"
 
 # columns are subject, courses, time, location, tutors

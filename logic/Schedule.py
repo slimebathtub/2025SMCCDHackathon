@@ -1,11 +1,18 @@
 import pandas as pd
-import os
 import sqlite3
+import os
+import django
+
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "campus_site.settings")
+django.setup()
 from tutoring.models import TutoringDailySchedule
+
+
 try:
     from .TimeHandler import merge_time_ranges as mtr
 except ImportError:
     from TimeHandler import merge_time_ranges as mtr
+    
     
     
 WEEK_DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
@@ -24,21 +31,17 @@ SUBJ_DICT = {
     "Economics"        : "ECON"
 }
 
-LC_URL = (
-    "https://docs.google.com/spreadsheets/u/1/d/e/"
-    "2PACX-1vSCej3JQkmwsCFHSLs1VYQQJ9KjtmFCeAaWKxRjsRlD6nawQJDKqycveJzAzqXHVC0u5NYl8SIfyHgQ"
-    "/pub?gid=0&single=true&output=csv"
-)
-ISC_URL = (
-    "https://docs.google.com/spreadsheets/d/e/"
-    "2PACX-1vTXGQcyHvjXs4o_4sFErW432K2jNC_kiSc6HN2ynw4kUufv1dYSLMsRORsG1GyMhpY_H89YohQegFYq"
-    "/pub?gid=0&single=true&output=csv"
-)
-MRC_URL = (
-    "https://docs.google.com/spreadsheets/d/e/"
-    "2PACX-1vRK33wM-yaF-svgS2vuzaSO_YP-Uh_NeZRP5MVRMIlp9tcOQIvcJRQLbpjhOyd0U73ou_IaW-l9G2Hm"
-    "/pub?gid=105984831&single=true&output=csv"
-)
+URL_DICT = {
+    "LC" :  "https://docs.google.com/spreadsheets/u/1/d/e/"
+            "2PACX-1vSCej3JQkmwsCFHSLs1VYQQJ9KjtmFCeAaWKxRjsRlD6nawQJDKqycveJzAzqXHVC0u5NYl8SIfyHgQ"
+            "/pub?gid=0&single=true&output=csv",
+    "ISC":  "https://docs.google.com/spreadsheets/d/e/"
+            "2PACX-1vTXGQcyHvjXs4o_4sFErW432K2jNC_kiSc6HN2ynw4kUufv1dYSLMsRORsG1GyMhpY_H89YohQegFYq"
+            "/pub?gid=0&single=true&output=csv",
+    "MRC": "https://docs.google.com/spreadsheets/d/e/"
+            "2PACX-1vRK33wM-yaF-svgS2vuzaSO_YP-Uh_NeZRP5MVRMIlp9tcOQIvcJRQLbpjhOyd0U73ou_IaW-l9G2Hm"
+            "/pub?gid=105984831&single=true&output=csv"
+}
 
 # df columns are WEEK_DAYS
 # df rows are the time
@@ -147,3 +150,4 @@ class Schedule:
                 )
                 instances.append(inst)
         return instances
+    

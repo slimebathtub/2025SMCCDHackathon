@@ -1,10 +1,10 @@
 import pandas as pd
-#import sqlite3
+
 
 try:
-    from .Schedule import MRC_URL, WEEK_DAYS, Schedule, TeachingSlot
+    from .Schedule import URL_DICT, WEEK_DAYS, Schedule, TeachingSlot
 except ImportError:
-    from Schedule import MRC_URL, WEEK_DAYS, Schedule, TeachingSlot
+    from Schedule import URL_DICT, WEEK_DAYS, Schedule, TeachingSlot
 
 
 ''' This script is meant to parse the MRC (Math Resource Center) tutoring schedule
@@ -16,7 +16,7 @@ except ImportError:
 '''
 
 # df.iloc[y1:y2, x1:x2] # y1:y2 = rows, x1:x2 = columns
-SOURCE_DF = pd.read_csv(MRC_URL)
+SOURCE_DF = pd.read_csv(URL_DICT.get("MRC"))
 LOCATION = "Math Resource Center"
 
 def linear_search(key="CLOSED", start_index=0, axis="col"):
