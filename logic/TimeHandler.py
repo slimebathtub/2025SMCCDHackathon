@@ -2,6 +2,10 @@ import re
 import pandas as pd
 from datetime import datetime
 
+class Time:
+    def __init__(self, start_t = "NAN", last_t = "NAN"):
+        self.start_t, self.last_t = start_t, last_t
+
 def merge_time_ranges(df: pd.DataFrame):
     
     df = time_handler(df)

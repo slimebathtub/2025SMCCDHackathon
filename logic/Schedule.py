@@ -2,18 +2,21 @@ import pandas as pd
 import sqlite3
 import os
 import django
-
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "campus_site.settings")
-django.setup()
-from tutoring.models import TutoringDailySchedule
-
+import yaml
+from core.models import Center
 
 try:
     from .TimeHandler import merge_time_ranges as mtr
 except ImportError:
     from TimeHandler import merge_time_ranges as mtr
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "campus_site.settings")
+django.setup()
+from tutoring.models import TutoringDailySchedule
     
-    
+center_info_path = os.path.join("tutoring", "databases", "centers_info.yml")
+with open(center_info_path, "r") as file:
+    data = yaml.safe_load(file)
+
     
 WEEK_DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
 COLUMNS = ["subject", "courses", "time", "location", "tutors"]
@@ -135,6 +138,7 @@ class Schedule:
         TutoringDailySchedule (unsaved) instance.
         """
         instances = []
+        center, _ = Center.objects.get_or_create(name="Main Building")
         for day, df in self.week_dfs.items():
             if df is None or df.empty:
                 continue
@@ -146,7 +150,7 @@ class Schedule:
                     courses = row['courses'],      # JSONField can take list
                     time = row['time'],
                     tutors = row['tutors'],
-                    location = row['location']
+                    location = center
                 )
                 instances.append(inst)
         return instances

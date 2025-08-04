@@ -15,3 +15,12 @@ class Center(models.Model):
 
     def __str__(self):
         return self.user.username
+    
+    def __repr__(self):
+        return f'{self.center_full_name} at {self.center_building_address} by {self.user.username}'
+
+    def __eq__(self, other):
+        return isinstance(other, Center) and self.center_full_name == other.center_full_name
+
+    def __hash__(self):
+        return hash(self.center_full_name)

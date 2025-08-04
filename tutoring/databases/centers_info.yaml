@@ -1,0 +1,36 @@
+WEEK_DAYS:
+  - Monday
+  - Tuesday
+  - Wednesday
+  - Thursday
+  - Friday
+
+COLUMNS:
+  - subject
+  - courses
+  - time
+  - location
+  - tutors
+
+WEEK_DICT:
+  MON: Monday
+  TUES: Tuesday
+  WED: Wednesday
+  THURS: Thursday
+  FRI: Friday
+
+SUBJ_DICT:
+  Biology: BIOL
+  Chemistry: CHEM
+  Computer Science: CIS
+  Engineering: ENGR
+  Math: MATH
+  Physics: PHYS
+  Accounting: ACC
+  Business: BUSS
+  Economics: ECON
+
+URL_DICT:
+  LC: "https://docs.google.com/spreadsheets/u/1/d/e/2PACX-1vSCej3JQkmwsCFHSLs1VYQQJ9KjtmFCeAaWKxRjsRlD6nawQJDKqycveJzAzqXHVC0u5NYl8SIfyHgQ/pub?gid=0&single=true&output=csv"
+  ISC: "https://docs.google.com/spreadsheets/d/e/2PACX-1vTXGQcyHvjXs4o_4sFErW432K2jNC_kiSc6HN2ynw4kUufv1dYSLMsRORsG1GyMhpY_H89YohQegFYq/pub?gid=0&single=true&output=csv"
+  MRC: "https://docs.google.com/spreadsheets/d/e/2PACX-1vRK33wM-yaF-svgS2vuzaSO_YP-Uh_NeZRP5MVRMIlp9tcOQIvcJRQLbpjhOyd0U73ou_IaW-l9G2Hm/pub?gid=105984831&single=true&output=csv"
