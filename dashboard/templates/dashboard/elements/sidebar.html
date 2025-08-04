@@ -1,0 +1,24 @@
+<div class="sidebar">
+        <div>
+            <h3>Dashboard</h3>
+            <div class = "link-container">
+                <a href="{% url 'resources_page' %}" class="{% if '/dashboard/resources' in request.path %}active{% endif %}">
+                    <i class="bi {% if '/dashboard/resources' in request.path %}bi-box-seam-fill{% else %}bi-box-seam{% endif %}"></i>
+                    Resources</a>
+                <a href="{% url 'room_page' %}" class="{% if '/dashboard/room' in request.path %}active{% endif %}">
+                    <i class="bi {% if '/dashboard/room' in request.path %}bi-door-open-fill{% else %}bi-door-closed-fill{% endif %}"></i>
+                    Room</a>
+                <a href="#">Announcement</a>
+                <a href="#">Tutoring</a>
+                <a href="{% url 'setting_page' %}" class="{% if '/dashboard/setting' in request.path %}active{% endif %}">
+                    <i class="bi {% if '/dashboard/setting' in request.path %}bi-gear-fill{% else %}bi-gear{% endif %}"></i>
+                    Setting</a>
+            </div>
+        </div>
+        <div class="external-link p-3">
+            <ul>
+                <li><a href="#">Contact us</a></li>
+                <li><a href="#">Bug report</a></li>
+            </ul>
+        </div>
+</div>

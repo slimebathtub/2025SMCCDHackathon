@@ -14,6 +14,8 @@ from rooms.models import Room
 from tutoring.models import TutoringDailySchedule
 from .forms import ItemForm, RoomForm, CenterForm, TagForm
 from django.apps import apps
+from django.core.paginator import Paginator
+from django.shortcuts import render
 
 CENTERS = ["MRC", "ISC", "LC"]
 
@@ -37,9 +39,14 @@ def dashboard_view(request):
     filter_status = request.GET.get('filter', 'all')
     if filter_status == 'unavailable':
         items = items.filter(status='unavailable')
+
+    paginator = Paginator(items, 8)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     return render(request, 'dashboard/pages/resources_page.html', {
-        'items': items,
-        'tutor_session': tutor_schedules,
+        'items': page_obj,
+        # 'tutor_session': tutor_schedules,
         'username': user.username,
         'filter_status': filter_status,
     })
@@ -117,18 +124,25 @@ def generic_delete_view(request, model_name, id):
 def dashboard_room_view(request):
     user = request.user
     if not user.is_authenticated:
+        # you could redirect to login or treat as “else” below
         rooms = Room.objects.none()
     elif user.username in CENTERS:
-        rooms = Room.objects.filter(location__user__username=request.user.username)    
+        rooms = Room.objects.filter(location__user__username=user.username)
+        # tutor_schedules = TutoringDailySchedule.objects.filter(location__user_name=user.username)
     else:
         rooms = Room.objects.all()
-    
+
     #filter:
     filter_status = request.GET.get('filter', 'all')
     if filter_status == 'unavailable':
         rooms = rooms.filter(status='unavailable')
+
+    paginator = Paginator(rooms, 8)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     return render(request, 'dashboard/pages/room_page.html', {
-        'rooms': rooms,
+        'rooms': page_obj,
         'filter_status': filter_status,
     })
 

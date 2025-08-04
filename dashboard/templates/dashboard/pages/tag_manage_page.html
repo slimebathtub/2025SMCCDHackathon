@@ -7,15 +7,15 @@
 {% block content %}
 <div class = "row">
     <!-- left side bar -->
-    {% include 'dashboard/pages/setting_sidebar.html' %}
+    {% include 'dashboard/elements/setting_sidebar.html' %}
     <!-- right side content -->
-        <div class="upper-bar col-md-8">
-        <div class="tag-manager-container p-3 border rounded">
+    <div class="tag-list-bar col-md-8">
+        <div class="tag-custom-container col-md-8">
             <h2 class="mb-3">Tag Management</h2>
+            <p> double click to edit tag's name. </p>
 
             <!-- Tag list -->
             <div id="tag-list" class="d-flex flex-wrap gap-2 mb-3">
-                <!-- Example tags, replace with dynamic loop -->
                 {% for tag in tags %}
                     <span class="tag-pill"
                         data-id="{{ tag.id }}"
@@ -29,13 +29,13 @@
             <!-- Action buttons -->
             <div class="d-flex gap-2">
                 <button id="add-tag-btn"
-                        class="btn btn-primary"
+                        class="btn add-tag-btn btn-primary"
                         data-bs-toggle="modal"
                         data-bs-target="#editModal"
                         data-url="{% url 'tag_create_page' %}">
                     Add Tag
                 </button>
-                <button id="bulk-delete-trigger" class="btn btn-danger">Delete</button>
+                <button id="bulk-delete-trigger" class="btn btn-delete" disabled>Delete</button>
             </div>
         </div>
     </div>
@@ -43,13 +43,22 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('.tag-pill').forEach(tag => {
-        //  single click → toggle selection
+    const deleteBtn = document.getElementById('bulk-delete-trigger');
+    const tags = document.querySelectorAll('.tag-pill');
+
+    function updateDeleteButton() {
+        const anySelected = document.querySelectorAll('.tag-pill.selected').length > 0;
+        deleteBtn.disabled = !anySelected;
+    }
+
+    tags.forEach(tag => {
+        // single click -> update into selected and delete button
         tag.addEventListener('click', () => {
             tag.classList.toggle('selected');
+            updateDeleteButton();
         });
 
-        //  double click → open edit modal
+        // double click -> into edit modal
         tag.addEventListener('dblclick', () => {
             const editUrl = tag.dataset.editUrl;
             const modal = new bootstrap.Modal(document.getElementById('editModal'));
@@ -61,7 +70,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
         });
     });
+
+    updateDeleteButton();
 });
+
 </script>
 
 
