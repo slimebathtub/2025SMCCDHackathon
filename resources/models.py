@@ -1,8 +1,6 @@
 from django.db import models
 from core.models import Center
-
 # Create your models here.
-
 
 class ResourceEntity(models.Model):
     STATUS_CHOICES = [

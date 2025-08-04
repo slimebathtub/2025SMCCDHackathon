@@ -1,10 +1,10 @@
 import pandas as pd
-
-
 try:
     from .Schedule import URL_DICT, WEEK_DAYS, Schedule, TeachingSlot
+    from .TimeHandler import TimeRange
 except ImportError:
     from Schedule import URL_DICT, WEEK_DAYS, Schedule, TeachingSlot
+    from TimeHandler import TimeRange
 
 
 ''' This script is meant to parse the MRC (Math Resource Center) tutoring schedule
@@ -94,12 +94,11 @@ def parse_mrc():
             if day not in row or "HOURS" not in row:
                 continue
             
-            ts.time = row["HOURS"] 
+            ts.time = TimeRange.from_string(row["HOURS"]) 
             ts.tutors, ts.courses = row[day]
             
             mrc.add_slot(ts)
-        mrc.finalize_day(day)
-    mrc.fix_time()
+    mrc.finalize_week()
     return mrc
     
 def main():

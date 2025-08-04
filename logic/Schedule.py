@@ -3,155 +3,114 @@ import sqlite3
 import os
 import django
 import yaml
-from core.models import Center
 
 try:
-    from .TimeHandler import merge_time_ranges as mtr
+    from .TimeHandler import TimeRange 
 except ImportError:
-    from TimeHandler import merge_time_ranges as mtr
+    from TimeHandler import TimeRange 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "campus_site.settings")
 django.setup()
+
 from tutoring.models import TutoringDailySchedule
-    
-center_info_path = os.path.join("tutoring", "databases", "centers_info.yml")
+from core.models import Center
+
+center_info_path = os.path.join("tutoring", "databases", "centers_info.yaml")
 with open(center_info_path, "r") as file:
     data = yaml.safe_load(file)
 
-    
-WEEK_DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
-COLUMNS = ["subject", "courses", "time", "location", "tutors"]
-WEEK_DICT = dict(zip(["MON", "TUES", "WED", "THURS", "FRI"], WEEK_DAYS))
-
-SUBJ_DICT = {
-    "Biology"          : "BIOL",
-    "Chemistry"        : "CHEM",
-    "Computer Science" : "CIS",
-    "Engineering"      : "ENGR",
-    "Math"             : "MATH",
-    "Physics"          : "PHYS",
-    "Accounting"       : "ACC",
-    "Business"         : "BUSS",
-    "Economics"        : "ECON"
-}
-
-URL_DICT = {
-    "LC" :  "https://docs.google.com/spreadsheets/u/1/d/e/"
-            "2PACX-1vSCej3JQkmwsCFHSLs1VYQQJ9KjtmFCeAaWKxRjsRlD6nawQJDKqycveJzAzqXHVC0u5NYl8SIfyHgQ"
-            "/pub?gid=0&single=true&output=csv",
-    "ISC":  "https://docs.google.com/spreadsheets/d/e/"
-            "2PACX-1vTXGQcyHvjXs4o_4sFErW432K2jNC_kiSc6HN2ynw4kUufv1dYSLMsRORsG1GyMhpY_H89YohQegFYq"
-            "/pub?gid=0&single=true&output=csv",
-    "MRC": "https://docs.google.com/spreadsheets/d/e/"
-            "2PACX-1vRK33wM-yaF-svgS2vuzaSO_YP-Uh_NeZRP5MVRMIlp9tcOQIvcJRQLbpjhOyd0U73ou_IaW-l9G2Hm"
-            "/pub?gid=105984831&single=true&output=csv"
-}
-
-# df columns are WEEK_DAYS
-# df rows are the time
+WEEK_DAYS, WEEK_DICT = data["WEEK_DAYS"], data["WEEK_DICT"]
+COLUMNS, SUBJ_DICT = data["COLUMNS"], data["SUBJ_DICT"] 
+URL_DICT, CENTERS_ID = data["URL_DICT"], data["CENTERS_ID"]  
+INV_CENTERS_ID = {v["full_name"]: k for k, v in CENTERS_ID.items()}
+INVALIDS = {"nan", "NAN", "", None}
+#######################################################################################################################
 
 class TeachingSlot:
-    def __init__(
-        self,
-        location : str = "NAN",
-        day      : str = "NAN",
-        subject  : str = "NAN",
-        courses  : str = "NAN",
-        tutors    : str = "NAN",
-        time     : str = "NAN"
+    def __init__(self,
+        day      : str      = "NAN",
+        subject  : str      = "NAN",
+        courses  : str      = "NAN",
+        location : str      = "NAN",
+        tutors   : str      = "NAN",
+        time     : TimeRange = None
     ):
-        self.location = location
+        self.day      = day
         self.subject  = subject
         self.courses  = courses
+        self.location = location
+        self.tutors   = tutors 
         self.time     = time
-        self.day      = day
-        self.tutors    = tutors  
-        
+    @property
     def is_ok(self):
-        invalids = {"nan", "NAN", "", None}
-        return all(getattr(self, attr) not in invalids for attr in vars(self))
+        return all(getattr(self, attr) not in INVALIDS for attr in vars(self))
+    
+    def as_dict(self):
+        return {col: getattr(self, col) for col in COLUMNS}
+        
 
         
 
 class Schedule:
-    _day_buffers = {day: [] for day in WEEK_DAYS}
-    
+    _buffer : list[dict] = []
+    _weekday_type = pd.CategoricalDtype(categories=WEEK_DAYS, ordered=True)
     def __init__(self, location: str = "Unknown"):
         self.location = location
-        self.week_dfs = {day: pd.DataFrame(columns=COLUMNS) for day in WEEK_DAYS}
+        self.df = pd.DataFrame(columns=COLUMNS)
 
     def add_slot(self, ts: TeachingSlot):
-        if ts.day not in self._day_buffers:
-            print(f"Day '{ts.day}' is not recognized. Slot not added.")
-            return
-
-        if not ts.is_ok():
-            return
-
-        new_entry = {
-            "subject"  : ts.subject,
-            "courses"  : ts.courses,
-            "time"     : ts.time,
-            "location" : ts.location,
-            "tutors"   : ts.tutors
-        }
-
-        self._day_buffers[ts.day].append(new_entry)
-        
-    def finalize_day(self, day):
-        self.week_dfs[day] = pd.DataFrame(self._day_buffers[day], columns=COLUMNS)
+        if ts.is_ok:
+            self._buffer.append(ts.as_dict())
     
     def finalize_week(self):
-        for day in WEEK_DAYS:
-            self.finalize_day(day)
-        
-    def fix_time(self):
-        for day in WEEK_DAYS:
-            self.week_dfs[day] = mtr(self.week_dfs[day])
-            #WEEK_DAYS[day] = WEEK_DAYS[day].reset_index(drop=True)
-        
+        self.df = pd.DataFrame(self._buffer, columns=COLUMNS)
+        self.df["day"] = self.df["day"].astype(self._weekday_type)
+        self.df.sort_values(["day", "time"], inplace=True, ignore_index=True)
+                
     def to_sql(self):
-        path = os.path.join("tutoring", "databases", self.location + ".db")
+        path = os.path.join("tutoring", "databases", f"{self.location}.db")
         conn = sqlite3.connect(path)
         cur = conn.cursor()
-        for day in WEEK_DAYS:
-            df = self.week_dfs.get(day)
-            # Pre-process your DataFrame as before…
-            if df is None or df.empty:
-                return
-            
-            df["courses"] = df["courses"].apply(
-                    lambda x: ", ".join(x) if isinstance(x, list) else str(x)
-                ) 
-           
-            # <-- drop the table first if it exists
-            cur.execute(f'DROP TABLE IF EXISTS "{day}"')
-            conn.commit()
 
-            # now append (or replace) will never fail on CREATE
-            df.to_sql(day, conn, if_exists='append', index=False)
+        table_name = "schedule"
+        # drop existing
+        cur.execute(f'DROP TABLE IF EXISTS "{table_name}"')
+        conn.commit()
 
+        if self.df is None or self.df.empty:
+            conn.close()
+            return
+
+        df_copy = self.df.copy()
+        # normalize courses for storage
+        df_copy["courses"] = df_copy["courses"].apply(
+            lambda x: ", ".join(x) if isinstance(x, list) else str(x)
+        )
+        df_copy["time"] = df_copy["time"].apply(lambda x: str(x))
+
+        # write single flat table
+        df_copy.to_sql(table_name, conn, if_exists="append", index=False)
         conn.close()
+
         
     def to_instances(self) -> list[TutoringDailySchedule]:
         """
-        Turn every row in every weekday-DataFrame into a
-        TutoringDailySchedule (unsaved) instance.
+        Turn every row in the master DataFrame into unsaved TutoringDailySchedule instances.
         """
         instances = []
-        center, _ = Center.objects.get_or_create(name="Main Building")
-        for day, df in self.week_dfs.items():
-            if df is None or df.empty:
-                continue
-            for _, row in df.iterrows():
-                # row['courses'] is already a Python list (or string)
-                inst = TutoringDailySchedule(
-                    weekday = day,
-                    subject = row['subject'],
-                    courses = row['courses'],      # JSONField can take list
-                    time = row['time'],
-                    tutors = row['tutors'],
-                    location = center
-                )
-                instances.append(inst)
+        center_id = INV_CENTERS_ID.get(self.location)
+        center = Center.objects.get(center_id=center_id)
+
+        if self.df is None or self.df.empty:
+            return instances
+
+        for _, row in self.df.iterrows():
+            inst = TutoringDailySchedule(
+                weekday=row["day"],
+                subject=row["subject"],
+                courses=row["courses"],  
+                time=row["time"],
+                tutors=row["tutors"],
+                location=center,
+            )
+            instances.append(inst)
         return instances
-    

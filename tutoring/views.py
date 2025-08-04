@@ -24,7 +24,7 @@ def tutoring_table(request):
 
     # only narrow by subject if one was chosen
     if selected_subject:
-        qs = qs.filter(subject=selected_subject)
+        qs = qs.filter(subject=selected_subject, day=selected_day)
 
     context = {
         "weekdays":         TutoringDailySchedule.WEEKDAYS,

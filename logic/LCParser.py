@@ -3,8 +3,10 @@ import re
 
 try:
     from .Schedule import URL_DICT, WEEK_DAYS, Schedule, TeachingSlot
+    from .TimeHandler import TimeRange
 except ImportError:
     from Schedule import URL_DICT, WEEK_DAYS, Schedule, TeachingSlot
+    from TimeHandler import TimeRange
 
 SOURCE_DF = pd.read_csv(URL_DICT.get("LC"), dtype=str)
 LOCATION = "Learning Center"
@@ -52,11 +54,9 @@ def parse_lc():
                 
                 times = [c.strip() for c in re.split(r",|/", time_str) if c.strip()]
                 for time in times:
-                    ts.time = time
+                    ts.time = TimeRange.from_string(time)
                     lc.add_slot(ts)
-                    
-            lc.finalize_day(day)
-    lc.fix_time()
+    lc.finalize_week()
     return lc
 
 def main():

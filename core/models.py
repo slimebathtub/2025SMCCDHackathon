@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 # Create your models here.
 class Center(models.Model):
     # basic information
+    center_id = models.AutoField(primary_key=True)
     center_full_name = models.CharField(max_length=255)
     center_short_name = models.CharField(max_length=50)
     center_building_address = models.CharField(max_length=255)

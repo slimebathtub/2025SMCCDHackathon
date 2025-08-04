@@ -11,7 +11,7 @@ from django.contrib.auth.hashers import check_password
 from resources.models import Item, Tag
 from core.models import Center
 from rooms.models import Room
-from tutoring.models import TutoringDailySchedule
+#from tutoring.models import TutoringDailySchedule
 from .forms import ItemForm, RoomForm, CenterForm, TagForm
 from django.apps import apps
 from django.core.paginator import Paginator
@@ -27,13 +27,13 @@ def dashboard_view(request):
     if not user.is_authenticated:
         # you could redirect to login or treat as “else” below
         items = Item.objects.none()
-        tutor_schedules = TutoringDailySchedule.objects.none()
+        #tutor_schedules = TutoringDailySchedule.objects.none()
     elif user.username in CENTERS:
         items = Item.objects.filter(location__user__username=user.username)
-        tutor_schedules = TutoringDailySchedule.objects.filter(location=user.username)
+        ##tutor_schedules = TutoringDailySchedule.objects.filter(location=user.username)
     else:
         items = Item.objects.all()
-        tutor_schedules = TutoringDailySchedule.objects.all()
+        #tutor_schedules = TutoringDailySchedule.objects.all()
     
     #filter:
     filter_status = request.GET.get('filter', 'all')

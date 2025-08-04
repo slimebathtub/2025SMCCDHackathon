@@ -6,11 +6,12 @@ WEEK_DAYS:
   - Friday
 
 COLUMNS:
+  - day
   - subject
   - courses
-  - time
   - location
   - tutors
+  - time
 
 WEEK_DICT:
   MON: Monday
@@ -29,6 +30,20 @@ SUBJ_DICT:
   Accounting: ACC
   Business: BUSS
   Economics: ECON
+
+CENTERS_ID:
+  1:
+    short_name: ISC
+    full_name : Integrated Science Center
+  2: 
+    short_name: LC
+    full_name : Learning Center
+  3: 
+    short_name: LIB
+    full_name : Library
+  4: 
+    short_name: MRC
+    full_name : Math Resource Center
 
 URL_DICT:
   LC: "https://docs.google.com/spreadsheets/u/1/d/e/2PACX-1vSCej3JQkmwsCFHSLs1VYQQJ9KjtmFCeAaWKxRjsRlD6nawQJDKqycveJzAzqXHVC0u5NYl8SIfyHgQ/pub?gid=0&single=true&output=csv"

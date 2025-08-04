@@ -1,104 +1,123 @@
+from __future__ import annotations
 import re
-import pandas as pd
-from datetime import datetime
+from dataclasses import dataclass
 
 class Time:
-    def __init__(self, start_t = "NAN", last_t = "NAN"):
-        self.start_t, self.last_t = start_t, last_t
-
-def merge_time_ranges(df: pd.DataFrame):
-    
-    df = time_handler(df)
-    merged_rows = []
-    current_row = ''
-    
-    if df.empty:
-        return
-    current_row = df.iloc[0].copy()
-    
-    
-    for i in range(1, len(df)):
-        next_row = df.iloc[i]
-        curr_start_t, curr_end_t = current_row["time"].split(" - ")
-        next_start_t, next_end_t = next_row["time"].split(" - ")
-        # unites identical consecutive rows (with adjacent time ranges)
-        if (
-            current_row["subject"] == next_row["subject"]
-            and current_row["courses"] == next_row["courses"]
-            and current_row["location"] == next_row["location"]
-            and current_row["tutors"] == next_row["tutors"]
-            and curr_end_t == next_start_t
-        ):
-            # Merge the time ranges
-            current_row["time"] = f"{curr_start_t} - {next_end_t}"
-        else:
-            # Append the current row to the merged list and move to the next row
-            merged_rows.append(current_row)
-            current_row = next_row.copy()
-
-    # Append the last row
-    merged_rows.append(current_row)
-
-    # Convert the merged rows back into a DataFrame
-    merged_df = pd.DataFrame(merged_rows)
-    return merged_df
-    
-
-def change_time_format(time_range):
-    time = str(time_range).strip()
-    # this time you are not escaping the pattern
-    pattern = r'(\d{1,2})(:\d{2})?\s*(am|pm|AM|PM)?'
-    
-    #  thanks re, for existing
-    start, end = re.split(r"\s*-\s*", time, 1)
-    
-    # Match and format the start time
-    start_match = re.match(pattern, start.strip())
-    start_formatted = format_time(start_match, default_period="PM") 
-    
-    # Match and format the end time
-    end_match = re.match(pattern, end.strip())
-    end_formatted = format_time(end_match)  
-    
-    return f"{start_formatted} - {end_formatted}"
-
-def format_time(match, default_period=None):
-    if not match:
-        return ""
-    hour, minutes, period = match.groups()
-    hour = int(hour)
-    if not minutes:
-        minutes = ":00"   # Default to ":00" if minutes are missing
-    if not period and default_period:  # If AM/PM is missing, use the default
-        period = default_period
-    if 7 <= hour <= 11:
-        period = "AM" # this is ur fault MATH 145
-    return f"{hour:02d}{minutes} {period.upper() if period else ''}"           
-    
-def time_handler(df : pd.DataFrame):
-    df["time"] = df["time"].apply(change_time_format)
-    
-    df["start_time"] = df["time"].apply(
-        lambda t: datetime.strptime(t.split(" - ")[0], "%I:%M %p")
+    _RE = re.compile(
+        r'^\s*(1[0-2]|0?[1-9])'          # hour 1..12
+        r'(?:\s*:\s*([0-5]?\d))?'       # allow single digit minute
+        r'\s*([AaPp][Mm])\s*$'          # AM/PM
     )
-    df = df.sort_values(by="start_time")
-    df = df.drop(columns=["start_time"])
-    
-    return df
 
-def main():
-    df = pd.DataFrame({
-        "subject": ["Math", "Physics"],
-        "courses": [["MATH 251", "MATH 253"], ["PHYS 100"]],
-        "time": ["9am - 10:00 am", "11:00 am -11:30pm"],
-        "location": ["MRC", "Learning Center"],
-        "tutors" : ["Hey", "You!"]
-    })
-    df = time_handler(df)
-    print(df["time"])
+    def __init__(self, s: str):
+        # 9:00 AM", "12:15 pm
+        m = self._RE.match(s)
+        if not m:
+            raise ValueError(f"invalid time format: {s!r}")
+        try:
+            hour = int(m.group(1))
+            minute = 0 if not m.group(2) else int(m.group(2))
+            ampm = m.group(3).upper()
+            if ampm == "AM":
+                if hour == 12:
+                    hour = 0
+            else:  # PM
+                if hour != 12:
+                    hour += 12
+            self.minutes = hour * 60 + minute  # 0..1439
+        except TypeError as e:
+            print(f'Something wrong with {s}')
+            print(f"hour, min, ampm = {m.group(1)}, {m.group(2)}, {m.group(3).upper()}")
+            raise e
+
+    def __str__(self):
+        h = self.minutes // 60
+        m = self.minutes % 60
+        suffix = "AM" if h < 12 else "PM"
+        display_h = h % 12
+        if display_h == 0:
+            display_h = 12
+        return f"{display_h}:{m:02d} {suffix}"
+
+    def __repr__(self):
+        return f"Time('{str(self)}')"
+
+    # comparison
+    def __lt__(self, other: Time) -> bool:
+        if not isinstance(other, Time):
+            return NotImplemented
+        return self.minutes < other.minutes
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, Time):
+            return False
+        return self.minutes == other.minutes
+
+    # addition: Time + int minutes -> Time
+    def __add__(self, offset: int) -> Time:
+        if not isinstance(offset, int):
+            return NotImplemented
+        total = (self.minutes + offset) % (24 * 60)
+        return Time.from_minutes(total)
+
+    __radd__ = __add__
+
+    # subtraction: Time - int minutes -> Time, or Time - Time -> difference in minutes
+    def __sub__(self, other):
+        if isinstance(other, int):
+            total = (self.minutes - other) % (24 * 60)
+            return Time.from_minutes(total)
+        if isinstance(other, Time):
+            return self.minutes - other.minutes  # can be negative
+        return NotImplemented
+
+    @classmethod
+    def from_minutes(cls, minutes: int) -> "Time":
+        if not (0 <= minutes < 24 * 60):
+            minutes %= 24 * 60
+        hour = minutes // 60
+        minute = minutes % 60
+        suffix = "AM" if hour < 12 else "PM"
+        display_h = hour % 12
+        if display_h == 0:
+            display_h = 12
+        return cls(f"{display_h}:{minute:02d} {suffix}")
+
+    # convenience for other comparisons
+    def __le__(self, other: Time) -> bool:
+        return self == other or self < other
+
+    def __gt__(self, other: Time) -> bool:
+        return not (self <= other)
+
+    def __ge__(self, other: Time) -> bool:
+        return not (self < other)
+    def __hash__(self):
+        return hash(str(self))
+
+        
+@dataclass(frozen=True)
+class TimeRange:
+    start: Time
+    end: Time
+     
+    @classmethod
+    def from_string(cls, s: str) -> "TimeRange":
+        left, right = [part.strip() for part in s.split("-", 1)]
+        return cls(start=Time(left), end=Time(right))
+
+    def __post_init__(self):
+        if self.end < self.start:
+            raise ValueError("end time must not be before start time")
+
+    def duration_minutes(self) -> int:
+        return self.end - self.start  
+
+    def overlaps(self, other: "TimeRange") -> bool:
+        return not (self.end <= other.start or other.end <= self.start)
+
+    def __str__(self):
+        return f"{self.start} - {self.end}"
     
-    
-    
-    
-if __name__ == "__main__":
-    main()
+    def __lt__(self, other : TimeRange):
+        return self.start < other.start

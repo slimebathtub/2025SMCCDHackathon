@@ -3,17 +3,16 @@ import re
 
 try:
     from .Schedule import URL_DICT, WEEK_DICT, SUBJ_DICT, Schedule, TeachingSlot
+    from .TimeHandler import TimeRange
 except ImportError:
     from Schedule import URL_DICT, WEEK_DICT, SUBJ_DICT, Schedule, TeachingSlot
+    from TimeHandler import TimeRange
 
 
 SOURCE_DF = pd.read_csv(URL_DICT.get("ISC"))
 LOCATION = "Integrated Science Center"
 
-def clean(subject, courses):
-    cleaned_courses = []
-    subject = str(subject).strip()
-    
+def clean(courses):
     try:
         match = re.search(r'\d+', courses)
         if "all" in courses.lower():
@@ -25,18 +24,13 @@ def clean(subject, courses):
             else:
                 courses = f'(Any)'
                 
-        
         courses_list = courses.split(",")
-        subj = SUBJ_DICT.get(subject)
-        
         cleaned_courses = [f'{course.strip()}' for course in courses_list if course.strip()]
-        
-        return subject, ", ".join(cleaned_courses)
+        return ", ".join(cleaned_courses)
     
     except AttributeError as e:
         print(f"Error processing courses: {e}")
         print(f"Original courses string: {courses}")
-        print(f"Subject: {subject}")
         raise e
         
     
@@ -63,7 +57,8 @@ def parse_isc():
         ts.day = WEEK_DICT[day_key]
         
         try:
-            ts.time, ts.courses = clean(row.iloc[1], row.iloc[3]) 
+            ts.time = TimeRange.from_string(row.iloc[1])
+            ts.courses = clean(row.iloc[3]) 
             ts.tutors = row.iloc[2]
         except TypeError as e:
             print(f"Error processing row {i}: {e}")
@@ -75,7 +70,6 @@ def parse_isc():
         
         isc.add_slot(ts)
     isc.finalize_week()
-    isc.fix_time()
     return isc
     
 
