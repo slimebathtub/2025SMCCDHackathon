@@ -1,0 +1,23 @@
+<div class="setting-side-bar col-md-4">
+    <a href="{% url 'setting_page' %}">
+        <div class="card mb-3 {% if request.path == '/dashboard/setting/' %}active{% endif %}">
+            <div class="card-body">
+                <h5 class="card-title">Account Setting</h5>
+            </div>
+        </div>
+    </a>
+    <a href="#">
+        <div class="card mb-3 {% if request.path == '/dashboard/advance/' %}active{% endif %}">
+            <div class="card-body">
+                <h5 class="card-title">Advance Information</h5>
+            </div>
+        </div>
+    </a>
+    <a href="{% url 'tag_management_page' %}">
+        <div class="card mb-3 {% if '/tag_management' in request.path %}active{% endif %}">
+            <div class="card-body">
+                <i class="fa-light fa-tags"></i> <h5 class="card-title">Tag management</h5>
+            </div>
+        </div>
+    </a>
+</div>

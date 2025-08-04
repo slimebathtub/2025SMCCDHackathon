@@ -1,0 +1,42 @@
+/* basic temp */
+.custom-pagination .page-item .page-link {
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    margin: 0 4px;
+    padding: 6px 12px;
+    color: #333;
+    background: #fff;
+    transition: all 0.2s ease;
+}
+
+/* current page */
+.custom-pagination .page-item.active .page-link {
+    background-color: #2a5298;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+}
+
+/* Prev / Next  long rectanga */
+.custom-pagination .page-item.prev .page-link,
+.custom-pagination .page-item.next .page-link {
+    display: inline-flex;          /* flex: let center work  */
+    justify-content: center;
+    align-items: center;
+    min-width: 80px;
+    padding: 8px 20px;
+    border-radius: 12px;
+    background: #f8f8f8;
+}
+/* Prev / Next disable to use */
+.custom-pagination .page-item.prev.disabled .page-link,
+.custom-pagination .page-item.next.disabled .page-link {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+/* Hover 效果 */
+.custom-pagination .page-item .page-link:hover {
+    background: #2a5298;
+    color: white;
+}
